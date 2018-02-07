@@ -1,0 +1,29 @@
+body {
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.animal-row {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.image-square {
+  width: 100%;
+  padding-top: 100%;
+  background-color: #ddd;
+  background-size: cover;
+}
+
+.animal-img{
+  display: block;
+  margin: auto;
+  width: 40%;
+}
+
+.background {
+  text-align: center;
+}

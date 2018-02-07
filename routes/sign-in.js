@@ -3,6 +3,9 @@ const router = express.Router();
 //const database = require('database');
 const expressSession = require('express-session');
 
+var pg = require('pg');
+
+
 const { Client } = require('pg');
 
 const client = new Client({
@@ -25,10 +28,10 @@ router.post('/', function(req, res,next) {
 	var password = req.body.password;
 	console.log(username);//for testing
 	console.log(password);// for testing
-	var results = [];
+	var context = {};
+	var userRole;
 	
-	//getQueryResults(result,username,password);
-    //console.log(result);
+
     
 	client.connect((err,done) => {
 	    if (err) {
@@ -41,65 +44,52 @@ router.post('/', function(req, res,next) {
 	
  
 
-	client.query('SELECT * FROM employee WHERE employee_email = $1 and employee_password =$2',[username,password], (err, res) => {
-	    //done();
+	client.query('SELECT * FROM employee WHERE employee_email = $1 and employee_password =$2',[username,password], (err, results) => {
+	  
 	    if (err) {
 	        return console.error('error running query', err);
 	    }
-	    //res.send(results);
-         
-	    if (err) throw err;
-	    console.log(res);
-	   // console.log(results);
-	   
-	    console.log(res.rowCount);
-	    if(res.rowCount==0)
+	 
+	    console.log(results);
+	    console.log(results.rows);
+  
+	    if(results.rowCount==0)
 	    {
 	        console.log("Wrong Email or Password has entered");
-	       
+	        res.setHeader('Content-Type', 'text/html');
+            res.render('sign-in')
+     
 	    }
-	   // res.status(200).send(res);
-	   
-	    })
-	
-	//client.end();
-	});
- 
-	console.log("this is the count", res.rowCount);
-	console.log("and the results", res);
-	var entry = res.rowCount;
-	
-	var userID;
-    
-	for (i = 0; i < entry; i++){
-	    if(( res.rows[i].employee_email === username) && (res.rows[i].employee_password === password))
-	    {
-	        userFirstName = res.rows[i].employee_first_name;
-	        userID = res.rows[i].employee_id;
-	        console.log(userFirstName);
-	        success = true;
-	        if (res.rows[i].employee_type === "admin")
-	        {
-	            console.log("this is admin");
-	            userRole = "admin";
-	        }
-	        else if (res.rows[i].employee_type === "user") 
+	    if(results.rowCount==1){
+	        context.results = results;
+	        if (results.rows[0].employee_type === "user")
 	        {
 	            console.log("this is user");
-	            userRole = "employee";
-	            console.log("I am here at AAA");
-	        }     
-
-	    }           
-	};
+	            // res.send(results); // writing  the resulsts on the same page(sign-in.hbs)
+	            res.setHeader('Content-Type', 'text/html');
+	            res.render('dashboard', context);
+	        }
+	        else if (results.rows[0].employee_type === "admin")
+	        {
+	            console.log("this is admin");
+	            // res.send(results); // writing  the resulsts on the same page(sign-in.hbs)
+	            res.setHeader('Content-Type', 'text/html');
+	            res.render('admin', context);
+	        }
+	        
+	       
+	    }
+	  
+	    client.end();
+	    })
 	
-    
-	console.log(res);
-	//res.redirect('/dashboard');
-	res.render('dashboard');
-      
+	
+	});
+ 
+
+
 });
 
-
-
 module.exports = router;
+
+

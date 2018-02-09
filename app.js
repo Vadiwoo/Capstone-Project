@@ -34,11 +34,51 @@ app.set('view engine', 'hbs');
 
 // Authentication
 app.use(require('express-session')({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: false
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: false
 }));
 
+// ADMIN STUFF
+//TODO this will probably need to be moved into it's own class
+const client = new Client({
+  connectionString : "pg://nhwljdkwkfhnoy:7a2f32711c734a5d67cfc0a1e59acc91654193795d8655de7ae0cfb27b630390@ec2-174-129-22-84.compute-1.amazonaws.com:5432/dfh46ttrtrflgb",
+  ssl: true,
+});
+
+app.get('/admin_main', function(req, res) {
+  res.render('admin_main');
+});
+
+app.get('/admin_management', function(req,res){
+  res.render('admin_management');
+});
+
+app.get('/user/:userEmail', function(req,res){
+  var payload;
+  client.connect((err,done) => {
+    if (err) {
+      console.error('connection error', err.stack)
+    } else {
+      console.log('connected to database')
+    }
+
+    client.query('SELECT * FROM employee WHERE employee_email = $1',[req.params.userEmail], (err, results) => {
+      console.log(req.params.userEmail);
+      if(results.rowCount === 0) {
+        console.log("rowcount is 0");
+        client.end();
+        res.status(404).send("User Does Not Exist");
+      }
+      else {
+        payload = results.rows;
+        client.end();
+        res.send(payload);
+      }
+
+    });
+  });
+});
 
 //app.use(passport.initialize());
 //app.use(passport.session());

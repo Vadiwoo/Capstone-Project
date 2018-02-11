@@ -31,6 +31,8 @@ hbs.registerPartials(__dirname + '/views/partials');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 //app.use(expressSession({secret:'SuperSecretPassword'}));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // Authentication
 app.use(require('express-session')({
@@ -80,6 +82,30 @@ app.get('/user/:userEmail', function(req,res){
   });
 });
 
+app.post('/user', function(req,res){
+  console.log(req.body);
+  client.connect((err,done) => {
+    if (err) {
+      console.error('connection error', err.stack)
+    } else {
+      console.log('connected to database')
+    }
+
+    client.query("INSERT INTO employee (employee_first_name, employee_last_name, employee_email, employee_type, employee_password, access_date) VALUES($1, $2, $3, $4, $5, $6)",[ //ON CONFLICT (employee_email) DO UPDATE SET employee_first_name = EXCLUDED.employee_first_name, employee.employee_last_name = $2, employee.employee_email = $3, employee.employee_type = $4, employee.employee_password = $5 WHERE employee.employee_email = $3", [
+      req.body.firstName, req.body.lastName, req.body.email, req.body.type, req.body.password, (new Date()).toISOString()
+    ], (err, results) => {
+      if(!err) {
+        client.end();
+        res.status(200).send("User added/updated");
+      } else{
+      console.log(err);
+      res.status(500).send("Unknown server error when inserting/updating");
+      client.end();
+    }
+    });
+  });
+});
+
 //app.use(passport.initialize());
 //app.use(passport.session());
 
@@ -92,7 +118,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
-app.use('/', index);
+// app.use('/', index);
 app.use('/sign-in', signIn);
 //app.use('/employee', employee);
 app.use('/create-awards', createAwards)

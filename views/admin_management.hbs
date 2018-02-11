@@ -23,11 +23,11 @@
 </div>
 
 <div class="col-md-9 well">
-  <form class="needs-validation" novalidate>
+  <form action="/user" method="post">
     <div class="form-row">
       <div class="form-group col-md-6">
         <label for="firstName" class="col-form-label">First Name</label>
-        <input type="text" class="form-control" id="firstName" placeholder="First Name" required>
+        <input type="text" class="form-control" id="firstName" placeholder="First Name">
       </div>
       <div class="form-group col-md-6">
         <label for="lastName" class="col-form-label">Last Name</label>
@@ -62,38 +62,16 @@
     </div>
     <div class="form-row">
       <div class="form-group col-md-12">
-        <button class="btn btn-default" type="button" id="editButton" disabled=false onclick="">Edit</button>
-        <button class="btn btn-danger pull-right" type="button" id="deleteButton" disabled=true onclick="">Delete Profile</button>
+        <button class="btn btn-default" type="button" onclick="submitForm()" id=submitButton>Submit</button>
+        <button class="btn btn-default" type="button" id="editButton" onclick="">Edit</button>
+        <button class="btn btn-danger pull-right" type="button" id="deleteButton" onclick="">Delete Profile</button>
     </div>
-    <button class="btn btn-default" type="submit">Submit</button>
-
     </div>
   </form>
 </div>
 </div>
 
 <script>
-(function() {
-  'use strict';
-  window.addEventListener('load', function() {
-    console.log("This is here");
-    // Fetch all the forms we want to apply custom Bootstrap validation styles to
-    var forms = document.getElementsByClassName('needs-validation');
-    // Loop over them and prevent submission
-    var validation = Array.prototype.filter.call(forms, function(form) {
-      form.addEventListener('submit', function(event) {
-        console.log("Submit CLicked")
-        if (form.checkValidity() === false) {
-          console.log("Form isinvalde")
-          event.preventDefault();
-          event.stopPropagation();
-        }
-        form.classList.add('was-validated');
-      }, false);
-    });
-  }, false);
-})();
-
 function userSearch(){
   var userEmail = document.getElementById("userSearch");
   if(userEmail.value != ""){
@@ -103,13 +81,43 @@ function userSearch(){
         console.log(JSON.parse(xhttp.responseText));
         json = JSON.parse(xhttp.responseText)[0];
         populateFormDisabled(json);
+
         enableEditButton();
+        enabledDeleteButton();
+        enableSubmitButton();
+
       }
     };
-
     xhttp.open("GET", "/user/"+userEmail.value, true);
     xhttp.send();
   }
+}
+
+function submitForm() {
+  var type;
+  if((document.getElementById("isAdminYes")).selected === true) {
+    type = "admin";
+  } else {
+    type = "user";
+  }
+
+  formData = {
+    "firstName" : (document.getElementById("firstName")).value,
+    "lastName" : (document.getElementById("lastName")).value,
+    "email" : (document.getElementById("email")).value,
+    "password" : document.getElementById("password").value,
+    "type" : type
+  };
+
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if(this.readyState == 4 && this.status == 200) {
+      console.log("Successfully added/updated user!")
+    }
+  };
+  xhttp.open("POST", "/user");
+  xhttp.setRequestHeader("Content-type", "application/json");
+  xhttp.send(JSON.stringify(formData));
 }
 
 function populateFormDisabled(json){
@@ -147,6 +155,10 @@ function disableEditButton() {
 
 function disableDeleteButton() {
   document.getElementById("deleteButton").disabled = true;
+}
+
+function enabledDeleteButton() {
+  document.getElementById("deleteButton").disabled = false;
 }
 
 function enableEditButton() {

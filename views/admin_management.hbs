@@ -1,0 +1,175 @@
+<div class="jumbotron">
+  <div class="container">
+    <h2>Administrator Management</h2>
+  </div>
+</div>
+
+<div class="col-md-3 container">
+  <div class="row">
+    <h2 align="center">Find User</h2>
+    <p>Search for a user profile by entering their email below</p>
+  </br>
+</div>
+<div class="row">
+  <div class="col-lg-12">
+    <div class="input-group">
+      <input type="text" class="form-control" id="userSearch" placeholder="Search for...">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button" onclick="userSearch()">Go!</button>
+      </span>
+    </div><!-- /input-group -->
+  </div><!-- /.col-lg-6 -->
+</div>
+</div>
+
+<div class="col-md-9 well">
+  <form action="/user" method="post">
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="firstName" class="col-form-label">First Name</label>
+        <input type="text" class="form-control" id="firstName" placeholder="First Name">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="lastName" class="col-form-label">Last Name</label>
+        <input type="text" class="form-control" id="lastName" placeholder="Last Name">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="email" class="col-form-label">Email</label>
+        <input type="email" class="form-control" id="email" placeholder="Email">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="password" class="col-form-label">Password</label>
+        <input type="password" class="form-control" id="password" placeholder="Password">
+        <input class="form-check-input" name="showPassword" type="checkbox" id=showPassword>
+        <label class="form-check-label" for="showPassword">Show Password</label>
+      </div>
+
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        <label>Administrator?</label>
+        <div class="form-check">
+          <input class="form-check-input" name="isAdmin" type="radio" value="yes" id="isAdminYes">
+          <label class="form-check-label" for="defaultCheck1">Yes</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" name="isAdmin" type="radio" value="no" id="isAdminNo">
+          <label class="form-check-label" for="defaultCheck1">No</label>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-12">
+        <button class="btn btn-default" type="button" onclick="submitForm()" id=submitButton>Submit</button>
+        <button class="btn btn-default" type="button" id="editButton" onclick="">Edit</button>
+        <button class="btn btn-danger pull-right" type="button" id="deleteButton" onclick="">Delete Profile</button>
+    </div>
+    </div>
+  </form>
+</div>
+</div>
+
+<script>
+function userSearch(){
+  var userEmail = document.getElementById("userSearch");
+  if(userEmail.value != ""){
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        console.log(JSON.parse(xhttp.responseText));
+        json = JSON.parse(xhttp.responseText)[0];
+        populateFormDisabled(json);
+
+        enableEditButton();
+        enabledDeleteButton();
+        enableSubmitButton();
+
+      }
+    };
+    xhttp.open("GET", "/user/"+userEmail.value, true);
+    xhttp.send();
+  }
+}
+
+function submitForm() {
+  var type;
+  if((document.getElementById("isAdminYes")).selected === true) {
+    type = "admin";
+  } else {
+    type = "user";
+  }
+
+  formData = {
+    "firstName" : (document.getElementById("firstName")).value,
+    "lastName" : (document.getElementById("lastName")).value,
+    "email" : (document.getElementById("email")).value,
+    "password" : document.getElementById("password").value,
+    "type" : type
+  };
+
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if(this.readyState == 4 && this.status == 200) {
+      console.log("Successfully added/updated user!")
+    }
+  };
+  xhttp.open("POST", "/user");
+  xhttp.setRequestHeader("Content-type", "application/json");
+  xhttp.send(JSON.stringify(formData));
+}
+
+function populateFormDisabled(json){
+  document.getElementById("firstName").value = json.employee_first_name;
+  document.getElementById("firstName").disabled = true;
+
+
+  document.getElementById("lastName").value = json.employee_last_name;
+  document.getElementById("lastName").disabled = true;
+
+  document.getElementById("password").value = json.employee_password;
+  document.getElementById("password").disabled = true;
+
+  document.getElementById("email").value = json.employee_email;
+  document.getElementById("email").disabled = true;
+
+
+  if (json.employee_type == "admin") {
+    document.getElementById("isAdminYes").checked = true;
+  } else {
+    document.getElementById("isAdminNo").checked = true;
+  }
+
+  document.getElementById("isAdminYes").disabled = true;
+  document.getElementById("isAdminNo").disabled = true;
+}
+
+function enableEditButton() {
+  document.getElementById("editButton").disabled = false;
+}
+
+function disableEditButton() {
+  document.getElementById("editButton").disabled = true;
+}
+
+function disableDeleteButton() {
+  document.getElementById("deleteButton").disabled = true;
+}
+
+function enabledDeleteButton() {
+  document.getElementById("deleteButton").disabled = false;
+}
+
+function enableEditButton() {
+  document.getElementById("deleteButton").disabled = false;
+}
+
+function disableSubmitButton() {
+  document.getElementById("submitButton").disabled = true;
+}
+
+function enableSubmitButton() {
+  document.getElementById("submitButton").disabled = false;
+}
+</script>

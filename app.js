@@ -12,9 +12,9 @@ var expressSession = require('express-session');
 //var database = require('database');
 //const User = require('./models/user');
 var port = process.env.PORT || 3000;
-const { Client } = require('pg');
+const db = require('./db')
 var index = require('./routes/index');
-var users = require('./routes/users');
+var user = require('./routes/user');
 //var employee = require('./routes/employee');
 var signIn = require('./routes/sign-in');
 var signOut = require('./routes/sign-out');
@@ -31,14 +31,25 @@ hbs.registerPartials(__dirname + '/views/partials');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 //app.use(expressSession({secret:'SuperSecretPassword'}));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // Authentication
 app.use(require('express-session')({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: false
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: false
 }));
 
+// ADMIN STUFF
+
+app.get('/admin_main', function(req, res) {
+  res.render('admin_main');
+});
+
+app.get('/admin_management', function(req,res){
+  res.render('admin_management');
+});
 
 //app.use(passport.initialize());
 //app.use(passport.session());
@@ -46,8 +57,6 @@ app.use(require('express-session')({
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -58,8 +67,9 @@ app.use('/sign-in', signIn);
 app.use('/create-awards', createAwards)
 app.use('/user-edit-profile', userProfile)
 app.use('/user-delete-award', deleteAward)
+app.use('/user', user);
+
 //app.use('/sign-out', sign-out);
-//app.use('/users', users);
 //app.use('/organizations', organizations);
 //app.use('/profiles', profiles);
 

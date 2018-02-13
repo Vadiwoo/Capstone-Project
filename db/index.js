@@ -1,3 +1,5 @@
+// Code taken from https://node-postgres.com/features/pooling
+
 const { Pool } = require('pg')
 
 const pool = new Pool({

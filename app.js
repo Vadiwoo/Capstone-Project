@@ -14,7 +14,7 @@ var expressSession = require('express-session');
 var port = process.env.PORT || 3000;
 const db = require('./db')
 var index = require('./routes/index');
-var users = require('./routes/user');
+var user = require('./routes/user');
 //var employee = require('./routes/employee');
 var signIn = require('./routes/sign-in');
 var signOut = require('./routes/sign-out');
@@ -67,7 +67,7 @@ app.use('/sign-in', signIn);
 app.use('/create-awards', createAwards)
 app.use('/user-edit-profile', userProfile)
 app.use('/user-delete-award', deleteAward)
-app.use('/user', users);
+app.use('/user', user);
 
 //app.use('/sign-out', sign-out);
 //app.use('/organizations', organizations);

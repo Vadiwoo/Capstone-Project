@@ -12,9 +12,9 @@ var expressSession = require('express-session');
 //var database = require('database');
 //const User = require('./models/user');
 var port = process.env.PORT || 3000;
-const { Client } = require('pg');
+const db = require('./db')
 var index = require('./routes/index');
-var users = require('./routes/users');
+var users = require('./routes/user');
 //var employee = require('./routes/employee');
 var signIn = require('./routes/sign-in');
 var signOut = require('./routes/sign-out');
@@ -42,11 +42,6 @@ app.use(require('express-session')({
 }));
 
 // ADMIN STUFF
-//TODO this will probably need to be moved into it's own class
-const client = new Client({
-  connectionString : "pg://nhwljdkwkfhnoy:7a2f32711c734a5d67cfc0a1e59acc91654193795d8655de7ae0cfb27b630390@ec2-174-129-22-84.compute-1.amazonaws.com:5432/dfh46ttrtrflgb",
-  ssl: true,
-});
 
 app.get('/admin_main', function(req, res) {
   res.render('admin_main');
@@ -56,76 +51,25 @@ app.get('/admin_management', function(req,res){
   res.render('admin_management');
 });
 
-app.get('/user/:userEmail', function(req,res){
-  var payload;
-  client.connect((err,done) => {
-    if (err) {
-      console.error('connection error', err.stack)
-    } else {
-      console.log('connected to database')
-    }
-
-    client.query('SELECT * FROM employee WHERE employee_email = $1',[req.params.userEmail], (err, results) => {
-      console.log(req.params.userEmail);
-      if(results.rowCount === 0) {
-        console.log("rowcount is 0");
-        client.end();
-        res.status(404).send("User Does Not Exist");
-      }
-      else {
-        payload = results.rows;
-        client.end();
-        res.send(payload);
-      }
-
-    });
-  });
-});
-
-app.post('/user', function(req,res){
-  console.log(req.body);
-  client.connect((err,done) => {
-    if (err) {
-      console.error('connection error', err.stack)
-    } else {
-      console.log('connected to database')
-    }
-
-    client.query("INSERT INTO employee (employee_first_name, employee_last_name, employee_email, employee_type, employee_password, access_date) VALUES($1, $2, $3, $4, $5, $6)",[ //ON CONFLICT (employee_email) DO UPDATE SET employee_first_name = EXCLUDED.employee_first_name, employee.employee_last_name = $2, employee.employee_email = $3, employee.employee_type = $4, employee.employee_password = $5 WHERE employee.employee_email = $3", [
-      req.body.firstName, req.body.lastName, req.body.email, req.body.type, req.body.password, (new Date()).toISOString()
-    ], (err, results) => {
-      if(!err) {
-        client.end();
-        res.status(200).send("User added/updated");
-      } else{
-      console.log(err);
-      res.status(500).send("Unknown server error when inserting/updating");
-      client.end();
-    }
-    });
-  });
-});
-
 //app.use(passport.initialize());
 //app.use(passport.session());
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
-// app.use('/', index);
+app.use('/', index);
 app.use('/sign-in', signIn);
 //app.use('/employee', employee);
 app.use('/create-awards', createAwards)
 app.use('/user-edit-profile', userProfile)
 app.use('/user-delete-award', deleteAward)
+app.use('/user', users);
+
 //app.use('/sign-out', sign-out);
-//app.use('/users', users);
 //app.use('/organizations', organizations);
 //app.use('/profiles', profiles);
 

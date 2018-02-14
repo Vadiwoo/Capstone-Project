@@ -9,8 +9,6 @@ var hbs = require('hbs');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var expressSession = require('express-session');
-//var database = require('database');
-//const User = require('./models/user');
 var port = process.env.PORT || 3000;
 const db = require('./db')
 var index = require('./routes/index');
@@ -23,8 +21,7 @@ var userProfile = require('./routes/user-edit-profile');
 var deleteAward = require('./routes/user-delete-award')
 var app = express();
 
-// Use native promises
-//mongoose.Promise = global.Promise;
+
 
 // view engine setup
 hbs.registerPartials(__dirname + '/views/partials');
@@ -67,16 +64,7 @@ app.use('/create-awards', createAwards)
 app.use('/user-edit-profile', userProfile)
 app.use('/user-delete-award', deleteAward)
 app.use('/user', user);
-
 //app.use('/sign-out', sign-out);
-//app.use('/organizations', organizations);
-//app.use('/profiles', profiles);
-
-//app.use('/sign-up', signUp);
-
-//app.use('/animals', animals);
-
-
 
 
 // catch 404 and forward to error handler

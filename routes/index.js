@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-const secured = require('../middleware/secured');
-const Role = require('../enums/role');
+//const secured = require('../middleware/secured');
+
 
 /* GET home page. */
 /*

@@ -4,10 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var config = require('config');
 var hbs = require('hbs');
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
 var expressSession = require('express-session');
 var port = process.env.PORT || 3000;
 const db = require('./db')
@@ -27,7 +24,6 @@ var app = express();
 hbs.registerPartials(__dirname + '/views/partials');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
-//app.use(expressSession({secret:'SuperSecretPassword'}));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 

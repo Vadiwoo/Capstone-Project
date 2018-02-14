@@ -62,16 +62,23 @@
     </div>
     <div class="form-row">
       <div class="form-group col-md-12">
-        <button class="btn btn-default" type="button" onclick="submitForm()" id=submitButton>Submit</button>
-        <button class="btn btn-default" type="button" id="editButton" onclick="">Edit</button>
-        <button class="btn btn-danger pull-right" type="button" id="deleteButton" onclick="">Delete Profile</button>
-    </div>
+        <button class="btn btn-default" type="button" onclick="submitForm()" id=submitButton>Save</button>
+        <button class="btn btn-default" type="button" id="editButton" onclick="editToggledOn()" disabled=true>Edit</button>
+        <button class="btn btn-default"  type="button" id="cancelEditButton" onclick="cancelEdit()" disabled=true>Cancel</button>
+        <button class="btn btn-danger pull-right" type="button" id="deleteButton" onclick="deleteUserProfile()" disabled=true>Delete Profile</button>
+      </div>
     </div>
   </form>
+  <div class="col-sm-12">
+    <div class="alert alert-success" id="success-alert" hidden=true>
+      <strong>Success!</strong>
+    </div>
+  </div >
 </div>
 </div>
 
 <script>
+
 function userSearch(){
   var userEmail = document.getElementById("userSearch");
   if(userEmail.value != ""){
@@ -83,9 +90,8 @@ function userSearch(){
         populateFormDisabled(json);
 
         enableEditButton();
-        enabledDeleteButton();
-        enableSubmitButton();
-
+        enableDeleteButton();
+        disableSubmitButton();
       }
     };
     xhttp.open("GET", "/user/"+userEmail.value, true);
@@ -94,6 +100,8 @@ function userSearch(){
 }
 
 function submitForm() {
+  disableSubmitButton();
+
   var type;
   if((document.getElementById("isAdminYes")).selected === true) {
     type = "admin";
@@ -113,6 +121,9 @@ function submitForm() {
   xhttp.onreadystatechange = function() {
     if(this.readyState == 4 && this.status == 200) {
       console.log("Successfully added/updated user!")
+      disableFormInputs();
+      enableEditButton();
+      alertSuccess();
     }
   };
   xhttp.open("POST", "/user");
@@ -120,29 +131,94 @@ function submitForm() {
   xhttp.send(JSON.stringify(formData));
 }
 
+function deleteUserProfile() {
+  profileEmail = document.getElementById("email").value;
+
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if(this.readyState == 4 && this.status == 200) {
+      console.log("Successfully deleted user!")
+      enableFormInputs();
+      disableEditButton();
+      alertSuccess();
+    }
+  };
+
+  data = {
+    "email" : (document.getElementById("email")).value
+  }
+  xhttp.open("DELETE", "/user");
+  xhttp.setRequestHeader("Content-type", "application/json");
+  xhttp.send(JSON.stringify(data));
+}
+// help from https://stackoverflow.com/questions/23101966/bootstrap-alert-auto-close
+function alertSuccess() {
+  $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
+    $("#success-alert").slideUp(500);
+  });
+}
+
+function editToggledOn() {
+  enableSubmitButton();
+  enableCancelEditButton();
+  disableEditButton();
+
+  enableFormInputs();
+}
+
+function cancelEdit() {
+  disableSubmitButton();
+  enableEditButton();
+  disableCancelEditButton();
+
+  disableFormInputs();
+}
+
 function populateFormDisabled(json){
   document.getElementById("firstName").value = json.employee_first_name;
-  document.getElementById("firstName").disabled = true;
-
-
   document.getElementById("lastName").value = json.employee_last_name;
-  document.getElementById("lastName").disabled = true;
-
   document.getElementById("password").value = json.employee_password;
-  document.getElementById("password").disabled = true;
-
   document.getElementById("email").value = json.employee_email;
-  document.getElementById("email").disabled = true;
-
 
   if (json.employee_type == "admin") {
     document.getElementById("isAdminYes").checked = true;
   } else {
     document.getElementById("isAdminNo").checked = true;
   }
+  disableFormInputs();
+}
 
+function disableFormInputs() {
+  document.getElementById("firstName").disabled = true;
+  document.getElementById("lastName").disabled = true;
+  document.getElementById("password").disabled = true;
+  document.getElementById("email").disabled = true;
   document.getElementById("isAdminYes").disabled = true;
   document.getElementById("isAdminNo").disabled = true;
+}
+
+function enableFormInputs() {
+  document.getElementById("firstName").disabled = false;
+  document.getElementById("lastName").disabled = false;
+  document.getElementById("password").disabled = false;
+  document.getElementById("isAdminYes").disabled = false;
+  document.getElementById("isAdminNo").disabled = false;
+}
+
+function enableCancelEditButton() {
+  document.getElementById("cancelEditButton").disabled = false;
+}
+
+function disableCancelEditButton() {
+  document.getElementById("cancelEditButton").disabled = true;
+}
+
+function disableDeleteButton() {
+  document.getElementById("deleteButton").disabled = true;
+}
+
+function enableDeleteButton() {
+  document.getElementById("deleteButton").disabled = false;
 }
 
 function enableEditButton() {
@@ -153,18 +229,6 @@ function disableEditButton() {
   document.getElementById("editButton").disabled = true;
 }
 
-function disableDeleteButton() {
-  document.getElementById("deleteButton").disabled = true;
-}
-
-function enabledDeleteButton() {
-  document.getElementById("deleteButton").disabled = false;
-}
-
-function enableEditButton() {
-  document.getElementById("deleteButton").disabled = false;
-}
-
 function disableSubmitButton() {
   document.getElementById("submitButton").disabled = true;
 }
@@ -172,4 +236,5 @@ function disableSubmitButton() {
 function enableSubmitButton() {
   document.getElementById("submitButton").disabled = false;
 }
+
 </script>

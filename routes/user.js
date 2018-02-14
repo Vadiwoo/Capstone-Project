@@ -34,4 +34,17 @@ router.post('/', function(req,res){
     });
   });
 
+  router.get('/', function(req,res){
+    var payload;
+      db.query('DELETE FROM employee WHERE employee_email = $1',[req.params.email], (err, results) => {
+        console.log(req.params.userEmail);
+        if(err) {
+          res.status(404).send("Error deleting user profile");
+        }
+        else {
+          res.status(200);
+        }
+      });
+    });
+
 module.exports = router;

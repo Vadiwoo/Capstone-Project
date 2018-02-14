@@ -27,3 +27,7 @@ a {
 .background {
   text-align: center;
 }
+
+.alert{
+  width: 50%;
+}

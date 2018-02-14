@@ -78,7 +78,6 @@
 </div>
 
 <script>
-
 function userSearch(){
   var userEmail = document.getElementById("userSearch");
   if(userEmail.value != ""){
@@ -132,7 +131,7 @@ function submitForm() {
 }
 
 function deleteUserProfile() {
-  profileEmail = document.getElementById("email").value;
+  disableDeleteButton();
 
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
@@ -146,7 +145,8 @@ function deleteUserProfile() {
 
   data = {
     "email" : (document.getElementById("email")).value
-  }
+  };
+
   xhttp.open("DELETE", "/user");
   xhttp.setRequestHeader("Content-type", "application/json");
   xhttp.send(JSON.stringify(data));

@@ -51,8 +51,7 @@ app.get('/admin_management', function(req,res){
   res.render('admin_management');
 });
 
-//app.use(passport.initialize());
-//app.use(passport.session());
+
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -77,12 +76,7 @@ app.use('/user', user);
 
 //app.use('/animals', animals);
 
-/*
-// Passport config
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
-*/
+
 
 
 // catch 404 and forward to error handler

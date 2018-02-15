@@ -21,15 +21,53 @@ router.get('/', (req, res) => {
             var password = results.rows[0].employee_password;
           //  res.render('user-edit-profile', {message:"We have a user logged in! ", first_name:" " +req.session.username, last_name:"Cicak" });
 
-            res.render('user-edit-profile', {first_name:" " +first_name, last_name:" " +last_name, password:" "+password });
+            res.render('user-edit-profile', {first_name:""+first_name, last_name:""+last_name, password:""+password });
 
         }
     });
 });
     
+router.post('/', (req, res,next) => {
+    var password = req.body.new_password;
+    var confirmPassword = req.body.confirm_password;
+    var firstName =req.body.first_name;
+    var lastName = req.body.last_name;
+
+
+   if (password !== confirmPassword) {
+       //return next(new Error('Passwords do not match'));
+       res.render('user-edit-profile', { error_message: "Passwords do not match!" });
+       return;
+       }
+   
+   if (firstName == "") 
+   {
+      // return next(new Error('First Name is Empty'));
+       res.render('user-edit-profile', { error_message: "First Name is Empty!" });
+       return;
+   }
+   if (lastName == "") {
+      // return next(new Error('Last Name is Empty'));
+       res.render('user-edit-profile', { error_message: "Last Name is Empty!" });
+       return;
+   }
+    //testing
+    console.log(req.session.username);
+    console.log( req.body.first_name);
+    console.log( req.body.last_name);
+    console.log( req.body.new_password);
+    console.log(req.body.confirm_password);
+    console.log(req.session.username);
+
+    db.query("UPDATE employee SET employee_password = $1,employee_first_name = $2, employee_last_name = $3 WHERE employee_email= $4", [password, firstName, lastName,req.session.username],(err, results) =>{
+       
+        if (err) {
+            return console.error('error running query', err);
+        }
+        res.render('profile-edit', { succesful_message: "You Profile has been Updated Succesfully!" });
       
-      
-    
+    });
+});
 
 
 module.exports = router;

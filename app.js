@@ -60,7 +60,7 @@ app.use('/create-awards', createAwards)
 app.use('/user-edit-profile', userProfile)
 app.use('/user-delete-award', deleteAward)
 app.use('/user', user);
-//app.use('/sign-out', sign-out);
+app.use('/sign-out', signOut);
 
 
 // catch 404 and forward to error handler

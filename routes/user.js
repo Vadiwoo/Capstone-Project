@@ -7,7 +7,7 @@ const db = require('../db')
 router.get('/:userEmail', function(req,res){
   var payload;
     db.query('SELECT * FROM employee WHERE employee_email = $1',[req.params.userEmail], (err, results) => {
-      console.log(req.params.userEmail);
+      // console.log(req.params.userEmail);
       if(results.rowCount === 0) {
         console.log("rowcount is 0");
         res.status(404).send("User Does Not Exist");
@@ -33,5 +33,18 @@ router.post('/', function(req,res){
     }
     });
   });
+
+  router.delete('/', function(req,res){
+    console.log(req.body)
+      db.query('DELETE FROM employee WHERE employee.employee_email = $1',[req.body.email], (err, results) => {
+        console.log(req.body.email);
+        if(err) {
+          res.status(404).send("Error deleting user profile");
+        }
+        else {
+          res.status(200);
+        }
+      });
+    });
 
 module.exports = router;

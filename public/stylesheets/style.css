@@ -27,3 +27,11 @@ a {
 .background {
   text-align: center;
 }
+
+.alert{
+  width: 50%;
+}
+
+#createUser {
+  margin-top: 15px;
+}

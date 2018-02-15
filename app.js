@@ -10,7 +10,6 @@ var port = process.env.PORT || 3000;
 const db = require('./db')
 var index = require('./routes/index');
 var user = require('./routes/user');
-//var employee = require('./routes/employee');
 var signIn = require('./routes/sign-in');
 var signOut = require('./routes/sign-out');
 var createAwards = require('./routes/create-awards');
@@ -27,7 +26,7 @@ app.set('view engine', 'hbs');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// Authentication
+// Session
 app.use(require('express-session')({
   secret: 'keyboard cat',
   resave: false,

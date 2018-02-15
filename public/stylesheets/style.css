@@ -31,3 +31,7 @@ a {
 .alert{
   width: 50%;
 }
+
+#createUser {
+  margin-top: 15px;
+}

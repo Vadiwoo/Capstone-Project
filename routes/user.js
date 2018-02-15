@@ -7,7 +7,7 @@ const db = require('../db')
 router.get('/:userEmail', function(req,res){
   var payload;
     db.query('SELECT * FROM employee WHERE employee_email = $1',[req.params.userEmail], (err, results) => {
-      console.log(req.params.userEmail);
+      // console.log(req.params.userEmail);
       if(results.rowCount === 0) {
         console.log("rowcount is 0");
         res.status(404).send("User Does Not Exist");

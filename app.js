@@ -34,7 +34,6 @@ app.use(require('express-session')({
 }));
 
 // ADMIN STUFF
-
 app.get('/admin_main', function(req, res) {
   res.render('admin_main');
 });

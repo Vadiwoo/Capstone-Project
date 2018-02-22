@@ -1,8 +1,8 @@
 Award Branch for Final Project
 
 At this time...if the TexLive is installed....
-the award will be created
-PDF sent via Ethereal mail...on my local it showed the URL for the email
+the award will be created; 
+PDF sent via Ethereal mail (on my console it showed the URL for the email); and the 
 database award info updated
 
 I haven't figured out the handle bars and where my info is being sent

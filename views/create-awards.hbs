@@ -3,16 +3,16 @@
     <div style="display:inline-block"><h3>The Sample of the Certificate for the Winners</h3></div>
   
 </div>
-<img src="certificate-sample.png" alt="Cerificate" style="float:right;width:500px;height:500px;">
+<img src="certificate-sample.png" alt="Certificate" style="float:right;width:500px;height:500px;">
 <div class="row">
     <div class="col-sm-4">
         <form action="/create-awards" method="post">
             <div class="form-group">
                 <label for="award_type">Award Type</label>
                 <select id="award_type" name="award_type" class="form-control">
-                    <option value="" selected>Select</option>
-                    <option value="employee-of-the-year">Employee Of The Year</option>
-                    <option value="employee-of-the-week">Employee Of The Week</option>
+                    <option value="award_type" selected>Select</option>
+                    <option value="employee-of-the-year" name="employee-of-the-year">Employee Of The Year</option>
+                    <option value="employee-of-the-week" name="employee-of-the-week">Employee Of The Week</option>
                 </select>
             </div>
 
@@ -20,10 +20,10 @@
                 <label for="name">Award Winner's Name</label>
                 <div class="row">
                     <div class="col-xs-6">
-                        <input id="winnerFirstName" type="text" class="form-control" name="winnerFirstName" value="" placeholder="First Name" />
+                        <input id="winnerFirstName" type="text" class="form-control" name="winnerFirstName" value="winnerFirstName" placeholder="First Name" />
                     </div>
                     <div class="col-xs-6">
-                        <input id="winnerLastName" type="text" class="form-control" name="winnerLastName" value="" placeholder="Last Name" />
+                        <input id="winnerLastName" type="text" class="form-control" name="winnerLastName" value="winnerLastName" placeholder="Last Name" />
 
                     </div>
                 </div>
@@ -33,31 +33,28 @@
                 <label for="name">Award Winner's E-mail</label>
                 <div class="row">
                     <div class="col-xs-6">
-                        <input id="winnerFirstName" type="email" class="form-control" name="winnerEmail" value="" placeholder="E-mail" />
+                        <input id="winnerEmail" type="email" class="form-control" name="winnerEmail" value="winnerEmail" placeholder="E-mail" />
+                    </div>
+                </div>
+            </div>
+			
+			<div class="form-group">
+                <label for="name">Award Created Date</label>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <input id="dateCreated" type="date" class="form-control" name="dateCreated" value="dateCreated" placeholder="Date" />
                     </div>
                 </div>
             </div>
 
-           
-            <div class="form-group">
-                <label for="name">Award Created Date and Time</label>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <input id="date" type="date" class="form-control" name="date" value="" placeholder="Date" />
-                    </div>
-                    <div class="col-xs-6">
-                        <input id="time" type="time" class="form-control" name="time" value="" placeholder="Time" />
-                    </div>
-                </div>
-            </div>
             <div class="form-group">
                 <label>Award Created By</label>
                 <div class="row">
                     <div class="col-xs-6">
-                        <input id="firstName" type="text" class="form-control" name="firstName" value="" placeholder="First Name" />
+                        <input id="creatorFirstName" type="text" class="form-control" name="creatorFirstName" value="creatorFirstName" placeholder="First Name" />
                     </div>
                     <div class="col-xs-6">
-                        <input id="lastName" type="text" class="form-control" name="lastName" value="" placeholder="Last Name" />
+                        <input id="creatorLastName" type="text" class="form-control" name="creatorLastName" value="creatorLastName" placeholder="Last Name" />
                     </div>
                 </div>
             </div>

@@ -16,6 +16,10 @@ var createAwards = require('./routes/create-awards');
 var userProfile = require('./routes/user-edit-profile');
 var deleteAward = require('./routes/user-delete-award')
 var app = express();
+var spawn = require("child_process").spawn;
+var mu = require("mu2");
+var fs = require("fs-extra");
+var pdfLatex = require('pdflatex');
 
 
 

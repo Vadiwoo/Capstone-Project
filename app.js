@@ -8,8 +8,11 @@ var hbs = require('hbs');
 var expressSession = require('express-session');
 var port = process.env.PORT || 3000;
 const db = require('./db');
+<<<<<<< HEAD
 var bcrypt = require('bcrypt');
 
+=======
+>>>>>>> wip
 var index = require('./routes/index');
 var user = require('./routes/user');
 var signIn = require('./routes/sign-in');
@@ -17,13 +20,16 @@ var signOut = require('./routes/sign-out');
 var createAwards = require('./routes/create-awards');
 var userProfile = require('./routes/user-edit-profile');
 var deleteAward = require('./routes/user-delete-award');
+<<<<<<< HEAD
 var dashBoard = require('./routes/dashboard')
+=======
+var businessAnalytics = require('./routes/business_analytics');
+>>>>>>> wip
 var app = express();
 var spawn = require("child_process").spawn;
 var mu = require("mu2");
 var fs = require("fs-extra");
 var pdfLatex = require('pdflatex');
-
 
 
 // view engine setup
@@ -50,7 +56,6 @@ app.get('/admin_management', function(req,res){
 });
 
 
-
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -66,7 +71,7 @@ app.use('/user-edit-profile', userProfile)
 app.use('/user-delete-award', deleteAward)
 app.use('/user', user);
 app.use('/sign-out', signOut);
-
+app.use('/business_analytics', businessAnalytics);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

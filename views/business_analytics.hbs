@@ -1,0 +1,87 @@
+<head>
+  <!--Load the AJAX API-->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+
+  // Load the Visualization API and the corechart package.
+  google.charts.load('current', {'packages':['corechart']});
+
+  // Set a callback to run when the Google Visualization API is loaded.
+  // google.charts.setOnLoadCallback(drawChart);
+
+  // Callback that creates and populates a data table,
+  // instantiates the pie chart, passes in the data and
+  // draws it.
+  </script>
+</head>
+
+
+<div class="jumbotron">
+  <div class="container">
+    <h2>Business Analytics</h2>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div id="chartRow">
+    </div>
+  </div>
+  <div class="row">
+    <h2>This is where the buttons or dropdown will be</h2>
+  </div>
+  <div class="row">
+    <button class="btn btn-default" type="button" id="adminVsUser">Admin Vs User</button>
+    <button class="btn btn-default" type="button" id="departmentNumbers">Users By Department</button>
+  </div>
+</div>
+
+
+<script>
+function drawChart(title, data) {
+  // Set chart options
+  var options = {'title': title,
+  'width':600,
+  'height':500};
+
+  // Instantiate and draw our chart, passing in some options.
+  var chart = new google.visualization.PieChart(document.getElementById('chartRow'));
+  chart.draw(data, options);
+}
+
+document.getElementById("adminVsUser").addEventListener("click", function() {
+  fetch('business_analytics/query?queryName=userType').then(function(response){
+    response.json().then(function(json){
+      console.log(json);
+      drawChart("Admin Vs User", buildAdminVsUser(json));
+      // drawChart(json);
+    });
+  });
+});
+
+function buildAdminVsUser(chartInfo) {
+  var data = new google.visualization.DataTable();
+  data.addColumn('string', 'Employee Type');
+  data.addColumn('number', 'Count');
+
+  for(var row in chartInfo.rows) {
+    var row = chartInfo.rows[row];
+    data.addRow([row.employee_type, parseInt(row.count)]);
+  }
+  return data;
+}
+
+document.getElementById("departmentNumbers").addEventListener("click", function() {
+  fetch('business_analytics/query?queryName=userByDepartment').then(function(response){
+    response.json().then(function(json){
+      console.log(json);
+      drawChart("userByDepartment", buldUserByDepartment(json));
+      // drawChart(json);
+    });
+  });
+});
+
+function buildUserByDepartment(chartInfo) {
+  
+}
+</script>

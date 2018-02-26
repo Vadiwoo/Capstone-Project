@@ -8,6 +8,7 @@ var hbs = require('hbs');
 var expressSession = require('express-session');
 var port = process.env.PORT || 3000;
 const db = require('./db')
+
 var index = require('./routes/index');
 var user = require('./routes/user');
 var signIn = require('./routes/sign-in');

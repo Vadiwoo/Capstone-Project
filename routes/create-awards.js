@@ -23,13 +23,38 @@ router.post('/', (req, res) => {
     var winLast = req.body.winnerLastName;
 	var winEmail = req.body.winnerEmail;
 	var date = req.body.dateCreated;
-	var creatorFirst = req.body.creatorFirstName;
+	var creatorFirst= req.body.creatorFirstName;
 	var creatorLast = req.body.creatorLastName
+	var employee_id;
 	
 	//folder with the images used for the latex document creation
     var string = "";
     var templateFolder = "./public/images/";
+
+    //getting award creator id
+    db.query('SELECT * FROM employee WHERE employee_email = $1',[req.session.username], (err, results) => {
+        console.log(req.session.username);
+        if(results.rowCount === 0) {
+            res.status(404).send("User Does Not Exist");
+        }
+        else {
+            
+            employee_id = results.rows[0].employee_id;
+           // creatorFirst =  results.rows[0].employee_first_name;
+          //  creatorLast = results.rows[0].employee_last_name;
+        }
+   
 	
+    //inserting award into database
+    db.query("INSERT into award (award_name, creator, recipient, award_created,employee_id) VALUES($1, $2, $3, $4, $5)", [awardType, creatorLast, winLast, date,employee_id],(err, results) =>{
+       
+        if (err) {
+            return console.error('error running query', err);
+        }
+        
+    });
+    });
+
 	//mu2 is used to replace the key words with the user inputs {{ award_type }}
 	//Pulls from the root and compiles and renders the changes
     mu.root = templateFolder;
@@ -105,7 +130,7 @@ router.post('/', (req, res) => {
 						console.log('Message sent successfully!');
 						console.log(nodemailer.getTestMessageUrl(info));
 						var url = nodemailer.getTestMessageUrl(info);
-						res.render('send-award', { message: " " + url });
+						res.render('send-award', {message: " " + url, succesful_message: "Your Award Profile has been Updated Successfully!" });
 						
 					});
 				});
@@ -122,17 +147,10 @@ router.post('/', (req, res) => {
 	//var winFullName = winFirst + winLast;
 	//var creatorFull = creatorFirst + creatorLast;
 	
-	 db.query("INSERT into award (award_name, creator, recipient, award_created) VALUES($1, $2, $3, $4)", [awardType, creatorLast, winLast, date],(err, results) =>{
-       
-        if (err) {
-            return console.error('error running query', err);
-        }
-        res.render('profile-edit', { succesful_message: "Your Award Profile has been Updated Successfully!" });
-      
-    });
+	
 	
 
-    res.render('send-award');
+	 
 });  
 	     
     

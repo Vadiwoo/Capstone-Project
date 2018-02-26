@@ -1,14 +1,12 @@
-<div class="background">
-   
-    
+
     <h1>Sign In</h1>
 
-</div>
+
 
     <h4> {{error_message}} </h4>
 
 
-    <form action="/sign-in" method="post">
+    <form id="sign-in" action="/sign-in" method="post">
         <div class="form-group">
             <label for="username">Username</label>
             <input id="username" type="email" class="form-control" name="username" placeholder="Email">
@@ -19,5 +17,6 @@
         </div>
         <button type="submit" class="btn btn-primary">Sign In</button>
     </form>
-
-    <p><a href="/sign-in/password">Forgot Password?</a></p>
+    <div>
+        <p><a href="/sign-in/password">Forgot Password?</a></p>
+    </div>

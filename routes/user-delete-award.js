@@ -77,10 +77,13 @@ router.post('/deleteAward', function(req, res){
 
  
 });
+/***********
+router.get('/updateHistory', function(req, res){
+
+    res.render('user-delete-award',{deleteMessage:"Selected row has been succesfully deleted from your record!"});
 
 
+});
 
-
-
-
+*************/
 module.exports = router;

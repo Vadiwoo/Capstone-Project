@@ -1,8 +1,9 @@
 <ul>
     <li><a href="/sign-out">Sign Out</a></li>
-    <li><a href="/create-awards">Create Award</a></li>
     <li><a href="/user-edit-profile">Edit Profile</a></li>
-    <li><a href="/user-delete-award">My Awards History</a></li>
+    <li><a href="/user-delete-award">Awards History</a></li>
+    <li><a href="/create-awards">Create Award</a></li>
+    <li><a href="/dashboard">Dashboard</a></li>
 </ul>
 <h1>Here is your Award History! </h1>
 
@@ -27,36 +28,47 @@
                     <td><button onclick="deleteAward({{id}})">DELETE</button></td>
                 </tr>
                 {{/each}}
-                
+
             </tbody>
 
         </table>
     </div>
+
     <div>
         <h2>{{deleteMessage}}</h2>
     </div>
-   
+    <br />
+    <br />
 </div>
+<!--
 
+<div class="background">
+    <div>
+        <form action="/user-delete-award/UpdateHistory" method="get">
+            <button type="submit">Update History</button><br>
 
+        </form>
+    </div>
+</div>
+-->
 
-<script>
-    function deleteAward(id) {
-   
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if(this.readyState == 4 && this.status == 200) {
-                console.log("Successfully deleted user!")
-        
-            }
-        };
-        data = {
-            "id" : id
-        };
-        console.log("your selected id is", +id);
-        
-        xhttp.open("POST", "/user-delete-award/deleteAward");
-        xhttp.setRequestHeader("Content-type", "application/json");
-     xhttp.send(JSON.stringify(data));
-    }
-</script>
+    <script>
+        function deleteAward(id) {
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log("Successfully deleted user!")
+
+                }
+            };
+            data = {
+                "id": id
+            };
+            console.log("your selected id is", +id);
+
+            xhttp.open("POST", "/user-delete-award/deleteAward");
+            xhttp.setRequestHeader("Content-type", "application/json");
+            xhttp.send(JSON.stringify(data));
+        }
+    </script>

@@ -1,31 +1,53 @@
 <ul>
     <li><a href="/sign-out">Sign Out</a></li>
-    <li><a href="/create-awards">Create Award</a></li>
-    <li><a href="/user-edit-profile">Edit Profile</a></li>
-    <li><a href="/user-delete-award">My Awards History</a></li>
+   
 </ul>
 
 
-    <h1>Welcome back {{this.employee_first_name}}!</h1>
+    <h2>Welcome back {{this.employee_first_name}}!</h2>
   
     <br>
-    <h3>What would you like to do?</h3>
-    <br> 
-    <br>
-    <a class="btn btn-default" href="/create-awards">Create Award</a>
-    <br>
-    <br>
-    <br> 
-    <a class="btn btn-default" href="/user-edit-profile">Edit My Profile</a>
-    <br>
-    <br>
-    <br>
-    <a class="btn btn-default" href="/user-delete-award">Delete My Award History</a>
-    <br>
-  
 
 
+  <div class="jumbotron">
+    <div class="container">
+        <h2>Employee Recognition Awards in 3 Easy Steps.</h2>
+        <p>Step 1 : You choose the winner.</p>
+        <p>Step 2 : We build the award certificate.</P>
+        <p>Step 3 : We email the award's certificate to the winner.</p>
+    </div>
+</div>  
 
+ 
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+           
+            <a class="btn btn-primary btn-lg" href="/create-awards" role="button">Create Award</a>
+            <br />
+            <p> You can create the Employee Recognition Awards here.</p>
+            
+        </div>
+
+        <div class="col-md-6">
+            <a class="btn btn-primary btn-lg" href="/user-delete-award" role="button">Awards History</a>
+            <br />
+            <p>You can view your awards history and delete the previously given awards here.</p>
+           
+        </div>
+
+
+        <div class="col-md-6">
+            <a class="btn btn-primary btn-lg" href="/user-edit-profile" role="button">Edit Profile</a>
+            <br />
+            <p>You can change your name and password here.</p>
+            
+        </div>
+
+        
+
+    </div>
+</div>
 
 
     

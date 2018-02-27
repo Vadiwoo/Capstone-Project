@@ -15,7 +15,8 @@ var signIn = require('./routes/sign-in');
 var signOut = require('./routes/sign-out');
 var createAwards = require('./routes/create-awards');
 var userProfile = require('./routes/user-edit-profile');
-var deleteAward = require('./routes/user-delete-award')
+var deleteAward = require('./routes/user-delete-award');
+var dashBoard = require('./routes/dashboard')
 var app = express();
 var spawn = require("child_process").spawn;
 var mu = require("mu2");
@@ -58,7 +59,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Routes
 app.use('/', index);
 app.use('/sign-in', signIn);
-//app.use('/employee', employee);
+app.use('/dashboard', dashBoard);
 app.use('/create-awards', createAwards)
 app.use('/user-edit-profile', userProfile)
 app.use('/user-delete-award', deleteAward)

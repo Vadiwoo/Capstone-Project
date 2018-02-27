@@ -2,9 +2,7 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-.navbar-default {
-    color: #dddddd;
-}
+
 
 a {
   color: #00B7FF;
@@ -84,9 +82,7 @@ li a {
   margin-top: 15px;
 }
 
-nav {
-    background-color: #c34500;
-}
+
 
 #footer-row1 {
     padding: 1.5em 0;

@@ -24,7 +24,13 @@
 
 <div class="container">
   <div class="row">
-    <div id="chartRow">
+    <div class="col-lg-6">
+      <div id="chartRow">
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div id="table">
+      </div>
     </div>
   </div>
   <div class="row">
@@ -32,7 +38,13 @@
   </div>
   <div class="row">
     <button class="btn btn-default" type="button" id="adminVsUser">Admin Vs User</button>
-    <button class="btn btn-default" type="button" id="departmentNumbers">Users By Department</button>
+
+    <button class="btn btn-default" type="button" id="byDepartmentAll">All User Types By Department</button>
+    <button class="btn btn-default" type="button" id="byDepartmentUser">User Types By Department</button>
+    <button class="btn btn-default" type="button" id="byDepartmentAdmin">Admin Types By Department</button>
+
+    <button class="btn btn-default" type="button" id="userProfilesCreatedOn"> User Profiles Created by Day</button>
+
   </div>
 </div>
 
@@ -54,7 +66,6 @@ document.getElementById("adminVsUser").addEventListener("click", function() {
     response.json().then(function(json){
       console.log(json);
       drawChart("Admin Vs User", buildAdminVsUser(json));
-      // drawChart(json);
     });
   });
 });
@@ -65,23 +76,66 @@ function buildAdminVsUser(chartInfo) {
   data.addColumn('number', 'Count');
 
   for(var row in chartInfo.rows) {
-    var row = chartInfo.rows[row];
-    data.addRow([row.employee_type, parseInt(row.count)]);
+    var thisRow = chartInfo.rows[row];
+    data.addRow([thisRow.employee_type, parseInt(thisRow.count)]);
   }
   return data;
 }
 
-document.getElementById("departmentNumbers").addEventListener("click", function() {
-  fetch('business_analytics/query?queryName=userByDepartment').then(function(response){
+document.getElementById("byDepartmentAll").addEventListener("click", function() {
+  fetch('business_analytics/query?queryName=userByDepartment&scope=all').then(function(response){
     response.json().then(function(json){
       console.log(json);
-      drawChart("userByDepartment", buldUserByDepartment(json));
-      // drawChart(json);
+      drawChart("All Users By Department", buildUserByDepartment(json));
+    });
+  });
+});
+
+document.getElementById("byDepartmentUser").addEventListener("click", function() {
+  fetch('business_analytics/query?queryName=userByDepartment&scope=user').then(function(response){
+    response.json().then(function(json){
+      console.log(json);
+      drawChart("Users By Department", buildUserByDepartment(json));
+    });
+  });
+});
+
+document.getElementById("byDepartmentAdmin").addEventListener("click", function() {
+  fetch('business_analytics/query?queryName=userByDepartment&scope=admin').then(function(response){
+    response.json().then(function(json){
+      console.log(json);
+      drawChart("Admins By Department", buildUserByDepartment(json));
     });
   });
 });
 
 function buildUserByDepartment(chartInfo) {
-  
+  var data = new google.visualization.DataTable();
+  data.addColumn('string', 'Department Name');
+  data.addColumn('number', 'Count');
+
+  for(var row in chartInfo.rows) {
+    var thisRow = chartInfo.rows[row];
+    data.addRow([thisRow.department_name, parseInt(thisRow.count)]);
+  }
+  return data;
 }
+
+document.getElementById("userProfilesCreatedOn").addEventListener("click", function() {
+  fetch('business_analytics/query?queryName=profilesCreatedOn&scope=user').then(function(response){
+    response.json().then(function(json){
+      console.log(json);
+      drawChart("Admins By Department", buildUserByDepartment(json));
+    });
+  });
+});
+
+function buildProfilesCreatedOn() {
+  var dataTable = new google.visualization.DataTable();
+  dataTable.addColumn({ type: 'date', id: 'Date' });
+  dataTable.addColumn({ type: 'number', id: 'Count' });
+
+
+}
+
 </script>

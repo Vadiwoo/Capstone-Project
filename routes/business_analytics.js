@@ -15,9 +15,16 @@ router.get('/query', (req, res) => {
       res.send(queryRes);
     });
     break;
+
     case "userByDepartment":
     var scope = req.query.scope;
     queryByDepartment(scope).then(function(queryRes){
+      res.send(queryRes);
+    });
+    break;
+
+    case "awardsByType":
+    queryAwardsByType().then(function(queryRes) {
       res.send(queryRes);
     });
     break;
@@ -36,6 +43,10 @@ function queryByDepartment(scope) {
   else {
     return db.query('SELECT department.department_name, COUNT(department.department_name) FROM department LEFT JOIN employee on (department.department_id = employee.department_id) WHERE employee.employee_type = $1 GROUP BY department.department_name', [scope]);
   }
+}
+
+function queryAwardsByType() {
+  return db.query('SELECT award_name, COUNT(award_name) FROM award GROUP BY award_name');
 }
 
 function queryUsersByDepartment() {

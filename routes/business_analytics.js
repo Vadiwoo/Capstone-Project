@@ -28,6 +28,12 @@ router.get('/query', (req, res) => {
       res.send(queryRes);
     });
     break;
+
+    case "createdOnDays":
+    queryCreatedOnDays().then(function(queryRes) {
+      res.send(queryRes);
+    });
+    break;
     default:
   };
 });
@@ -51,6 +57,10 @@ function queryAwardsByType() {
 
 function queryUsersByDepartment() {
   return db.query('');
+}
+
+function queryCreatedOnDays() {
+  return db.query("SELECT date_part('year', access_date) y, date_part('month', access_date) m, date_part('day', access_date) d, COUNT (*) FROM employee GROUP BY (y,m,d)");
 }
 
 module.exports = router;

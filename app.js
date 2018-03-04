@@ -8,11 +8,8 @@ var hbs = require('hbs');
 var expressSession = require('express-session');
 var port = process.env.PORT || 3000;
 const db = require('./db');
-<<<<<<< HEAD
 var bcrypt = require('bcrypt');
 
-=======
->>>>>>> wip
 var index = require('./routes/index');
 var user = require('./routes/user');
 var signIn = require('./routes/sign-in');
@@ -20,11 +17,8 @@ var signOut = require('./routes/sign-out');
 var createAwards = require('./routes/create-awards');
 var userProfile = require('./routes/user-edit-profile');
 var deleteAward = require('./routes/user-delete-award');
-<<<<<<< HEAD
 var dashBoard = require('./routes/dashboard')
-=======
 var businessAnalytics = require('./routes/business_analytics');
->>>>>>> wip
 var app = express();
 var spawn = require("child_process").spawn;
 var mu = require("mu2");

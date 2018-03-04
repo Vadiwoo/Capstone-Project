@@ -63,16 +63,7 @@ router.post('/deleteAward', function(req, res){
             return console.error('error running query', err);
         
         }
-        else 
-        {
-            console.log("Any issue here?")
-           // return res.send({deleteMessage:"Selected row has been succesfully deleted from your record!"});
-            // res.render('delete-succesful',{deleteMessage:"Selected row has been succesfully deleted from your record!"});
-            return res. redirect('/user-delete-award');
-            
-        }
        
-        console.log("Did you reach here?")
     });
 
  

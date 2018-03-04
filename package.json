@@ -9,6 +9,7 @@
   "author": "Vadiwoo Karuppiah",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
     "config": "^1.29.2",
     "cookie-parser": "^1.4.3",

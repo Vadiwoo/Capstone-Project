@@ -1,76 +1,78 @@
-<ul>
-    <li><a href="/sign-out">Sign Out</a></li>
-    <li><a href="/user-edit-profile">Edit Profile</a></li>
-    <li><a href="/user-delete-award">Awards History</a></li>
-    <li><a href="/create-awards">Create Award</a></li>
-    <li><a href="/dashboard">Dashboard</a></li>
-</ul>
-<h1>Create Award</h1>
-<div style="text-align: right">
-    <div style="display:inline-block"><h3>The Sample of the Certificate for the Winners</h3></div>
-  
-</div>
-<img src="certificate-sample.png" alt="Certificate" style="float:right;width:500px;height:500px;">
-<div class="row">
-    <div class="col-sm-4">
-        <form action="/create-awards" method="post">
-            <div class="form-group">
-                <label for="award_type">Award Type</label>
-                <select id="award_type" name="award_type" class="form-control">
-                    <option value="award_type" selected>Select</option>
-                    <option value="employee-of-the-year" name="employee-of-the-year">Employee Of The Year</option>
-                    <option value="employee-of-the-week" name="employee-of-the-week">Employee Of The Week</option>
-                </select>
-            </div>
 
-            <div class="form-group">
-                <label for="name">Award Winner's Name</label>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <input id="winnerFirstName" type="text" class="form-control" name="winnerFirstName"  placeholder="First Name" />
-                    </div>
-                    <div class="col-xs-6">
-                        <input id="winnerLastName" type="text" class="form-control" name="winnerLastName"  placeholder="Last Name" />
+    <ul>
+        <li><a href="/sign-out">Sign Out</a></li>
+        <li><a href="/user-edit-profile">Edit Profile</a></li>
+        <li><a href="/user-delete-award">Awards History</a></li>
+        <li><a href="/create-awards">Create Award</a></li>
+        <li><a href="/dashboard">Dashboard</a></li>
+    </ul>
+    <h1>Create Award</h1>
+    <div style="text-align: right">
+        <div style="display:inline-block"><h3>The Sample of the Certificate for the Winners</h3></div>
 
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="name">Award Winner's E-mail</label>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <input id="winnerEmail" type="email" class="form-control" name="winnerEmail"  placeholder="E-mail" />
-                    </div>
-                </div>
-            </div>
-			
-			<div class="form-group">
-                <label for="name">Award Created Date</label>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <input id="dateCreated" type="date" class="form-control" name="dateCreated"  placeholder="Date" />
-                    </div>
-                    <div class="col-xs-6">
-                        <input id="time" type="time" class="form-control" name="time" value="" placeholder="Time" />
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Award Created By</label>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <input id="creatorFirstName" type="text" class="form-control" name="creatorFirstName"  placeholder="First Name" />
-                    </div>
-                    <div class="col-xs-6">
-                        <input id="creatorLastName" type="text" class="form-control" name="creatorLastName" VA placeholder="Last Name" />
-                    </div>
-                </div>
-            </div>
-
-
-            <button type="submit" class="btn btn-primary">Submit Award</button>
-        </form>
     </div>
-</div>
+    <img src="certificate-sample.png" alt="Certificate" style="float:right;width:500px;height:500px;">
+    <div class="row">
+        <div class="col-sm-4">
+            <form action="/create-awards" method="post">
+                <div class="form-group">
+                    <label for="award_type">Award Type</label>
+                    <select id="award_type" name="award_type" class="form-control">
+                        <option value="award_type" selected>Select</option>
+                        <option value="employee-of-the-year" name="employee-of-the-year">Employee Of The Year</option>
+                        <option value="employee-of-the-week" name="employee-of-the-week">Employee Of The Week</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Award Winner's Name</label>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <input id="winnerFirstName" type="text" class="form-control" name="winnerFirstName" placeholder="First Name" />
+                        </div>
+                        <div class="col-xs-6">
+                            <input id="winnerLastName" type="text" class="form-control" name="winnerLastName" placeholder="Last Name" />
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Award Winner's E-mail</label>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <input id="winnerEmail" type="email" class="form-control" name="winnerEmail" placeholder="E-mail" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Award Created Date</label>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <input id="dateCreated" type="date" class="form-control" name="dateCreated" placeholder="Date" />
+                        </div>
+                        <div class="col-xs-6">
+                            <input id="time" type="time" class="form-control" name="time" value="" placeholder="Time" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Award Created By</label>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <input id="creatorFirstName" type="text" class="form-control" name="creatorFirstName" placeholder="First Name" />
+                        </div>
+                        <div class="col-xs-6">
+                            <input id="creatorLastName" type="text" class="form-control" name="creatorLastName" VA placeholder="Last Name" />
+                        </div>
+                    </div>
+                </div>
+
+
+                <button type="submit" class="btn btn-primary">Submit Award</button>
+            </form>
+        </div>
+    </div>
+

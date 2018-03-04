@@ -1,3 +1,20 @@
+<style>
+    .buttonDelete {
+        float: left;
+        display: inline-block;
+        width: 20%;
+        height: 20%;
+        border: none;
+        background-color: #356B15;
+        color: white;
+        padding: 20px 20px;
+        font-size: 20px;
+        text-align: center;
+        border-radius: 15px;
+    }
+    
+
+</style>
 <ul>
     <li><a href="/sign-out">Sign Out</a></li>
     <li><a href="/user-edit-profile">Edit Profile</a></li>
@@ -5,9 +22,9 @@
     <li><a href="/create-awards">Create Award</a></li>
     <li><a href="/dashboard">Dashboard</a></li>
 </ul>
-<h1>Here is your Award History! </h1>
+<h3>Award History</h3>
 
-<h2>{{deleteMessage}}</h2>
+<h5>{{deleteMessage}}</h5>
 <div class="background">
     <div>
         <table>
@@ -39,18 +56,11 @@
     </div>
     <br />
     <br />
+    <form name="form1" id="form1" method="post" onsubmit="return redirect()">
+        <input type="submit" class="buttonDelete" name="delete" id="delete" value="Update My History">
+    </form>
 </div>
-<!--
 
-<div class="background">
-    <div>
-        <form action="/user-delete-award/UpdateHistory" method="get">
-            <button type="submit">Update History</button><br>
-
-        </form>
-    </div>
-</div>
--->
 
     <script>
         function deleteAward(id) {
@@ -70,5 +80,12 @@
             xhttp.open("POST", "/user-delete-award/deleteAward");
             xhttp.setRequestHeader("Content-type", "application/json");
             xhttp.send(JSON.stringify(data));
+        }
+
+        window.onload = function () {
+            document.getElementById("form1").onsubmit = function () {
+                window.location.replace("/user-delete-award");
+                return false;
+            }
         }
     </script>

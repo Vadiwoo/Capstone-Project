@@ -15,7 +15,7 @@ table {
 }
 
 td, th {
-    border: 1px solid #dddddd;
+    border: 2px solid #dddddd;
     text-align: left;
     padding: 8px;
 }
@@ -27,14 +27,7 @@ tr:nth-child(even) {
 h4 {
   color:red;
 }
-input[type="email"] {
-    width: 400px;
-    text-align:left;
-}
-input[type="password"] {
-    width: 400px;
-    text-align: left;
-}
+
 
 ul {
     list-style-type: none;
@@ -100,3 +93,22 @@ li a {
     color: #dddddd;
     font-size: 200%;
 }
+.block1 {
+    float: center;
+    display: inline-block;
+    width: 30%;
+    height: 30%;
+    border: none;
+    background-color: #356B15;
+    color: white;
+    padding: 50px 50px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+}
+
+    .block1:hover {
+        background-color: #ddd;
+        color: black;
+    }
+

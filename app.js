@@ -7,7 +7,8 @@ var bodyParser = require('body-parser');
 var hbs = require('hbs');
 var expressSession = require('express-session');
 var port = process.env.PORT || 3000;
-const db = require('./db')
+const db = require('./db');
+var bcrypt = require('bcrypt');
 
 var index = require('./routes/index');
 var user = require('./routes/user');

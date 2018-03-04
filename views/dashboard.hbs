@@ -1,53 +1,46 @@
+<style>
+   
+
+    h4 {
+        color: green;
+    }
+</style>
+
+<div class="background">
+
 <ul>
     <li><a href="/sign-out">Sign Out</a></li>
    
 </ul>
 
 
-    <h2>Welcome back {{this.employee_first_name}}!</h2>
+    <h4>Welcome back {{this.employee_first_name}}!</h4>
   
     <br>
 
 
-  <div class="jumbotron">
-    <div class="container">
-        <h2>Employee Recognition Awards in 3 Easy Steps.</h2>
-        <p>Step 1 : You choose the winner.</p>
-        <p>Step 2 : We build the award certificate.</P>
-        <p>Step 3 : We email the award's certificate to the winner.</p>
-    </div>
-</div>  
+
+  
+        <p> Are you ready to create employee recognition awards? </p>
+        <p>You choose the winner, We build  and send the award certificate to the winner!</p>
+      
+    <br>
+<br>
+<br>
+ 
 
  
-<div class="container">
-    <div class="row">
-        <div class="col-md-6">
-           
-            <a class="btn btn-primary btn-lg" href="/create-awards" role="button">Create Award</a>
-            <br />
-            <p> You can create the Employee Recognition Awards here.</p>
-            
-        </div>
+<div>
+    <button onclick="window.location.href='/create-awards'" class="block1">CREATE AWARD<br /><br /> <p> You can create the Employee Recognition Awards here.</p> <br /></button>
 
-        <div class="col-md-6">
-            <a class="btn btn-primary btn-lg" href="/user-delete-award" role="button">Awards History</a>
-            <br />
-            <p>You can view your awards history and delete the previously given awards here.</p>
-           
-        </div>
+    <button onclick="window.location.href='user-delete-award'" class="block1">AWARDS HISTORY<p><br />You can view your awards history and delete the previously given awards here.</p> </button>
 
+    <button onclick="window.location.href = '/user-edit-profile'" class="block1">MY PROFILE<br /><br /><p>You can change your name and password here.</p><br /></button>
 
-        <div class="col-md-6">
-            <a class="btn btn-primary btn-lg" href="/user-edit-profile" role="button">Edit Profile</a>
-            <br />
-            <p>You can change your name and password here.</p>
-            
-        </div>
-
-        
-
-    </div>
 </div>
 
 
-    
+
+</div>
+
+

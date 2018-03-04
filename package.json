@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "CS467 Capstone Project",
   "main": "app.js",
-  "scripts": {
-    "start": "node app.js"
-  },
   "author": "Vadiwoo Karuppiah",
   "license": "ISC",
   "dependencies": {

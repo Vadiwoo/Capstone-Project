@@ -33,17 +33,40 @@
     <div class="col-lg-4">
       <h3>Accounts</h3>
       <div class="list-group">
-        <button type="button" class="list-group-item list-group-item-action" id="adminVsUser">Admin Vs User Count</button>
-        <button type="button" class="list-group-item list-group-item-action" id="byDepartmentAll">All User Types By Department</button>
-        <button type="button" class="list-group-item list-group-item-action" id="byDepartmentUser">Normal Users By Department</button>
-        <button type="button" class="list-group-item list-group-item-action" id="byDepartmentAdmin">Admin Types By Department</button>
-        <button type="button" class="list-group-item list-group-item-action" id="userProfilesCreatedOn">Profiles Created by Day</button>
+        <button type="button" class="list-group-item list-group-item-action" id="adminVsUser">Admin Vs User Count
+          <span class="badge badge-primary badge-pill">Pie</span>
+        </button>
+        <button type="button" class="list-group-item list-group-item-action" id="userProfilesCreatedOn">Profiles Created by Day
+          <span class="badge badge-primary badge-pill">Calendar</span>
+        </button>
       </div>
     </div>
     <div class="col-lg-4">
       <h3>Awards</h3>
       <div class="list-group">
-        <button type="button" class="list-group-item list-group-item-action" id="awardTypeComparison">Count by Award Type</button>
+        <button type="button" class="list-group-item list-group-item-action" id="awardTypeComparison">Count by Award Type
+          <span class="badge badge-primary badge-pill">Pie</span>
+        </button>
+        <button type="button" class="list-group-item list-group-item-action" id="awardsPerDay">Awards Created Per Day
+          <span class="badge badge-primary badge-pill">Calendar</span>
+        </button>
+        <button type="button" class="list-group-item list-group-item-action" id="topThreeCreators">Top 3 Award Creators
+          <span class="badge badge-primary badge-pill">Bar</span>
+        </button>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <h3>Departments</h3>
+      <div class="list-group">
+        <button type="button" class="list-group-item list-group-item-action" id="byDepartmentAll">All User Types By Department
+          <span class="badge badge-primary badge-pill">Pie</span>
+        </button>
+        <button type="button" class="list-group-item list-group-item-action" id="byDepartmentUser">Normal Users By Department
+          <span class="badge badge-primary badge-pill">Pie</span>
+        </button>
+        <button type="button" class="list-group-item list-group-item-action" id="byDepartmentAdmin">Admin Types By Department
+          <span class="badge badge-primary badge-pill">Pie</span>
+        </button>
       </div>
     </div>
   </div>
@@ -54,21 +77,31 @@
 function drawChart(title, data) {
   // Set chart options
   var options = {'title': title,
-  'width':600,
-  'height':500};
+  'width':500,
+  'height':400};
 
   // Instantiate and draw our chart, passing in some options.
   var chart = new google.visualization.PieChart(document.getElementById('chartRow'));
   chart.draw(data, options);
 }
 
+function drawBarChart(title, data) {
+  // Set chart options
+  var options = {'title': title,
+  'width':700,
+  'height':400};
+
+  // Instantiate and draw our chart, passing in some options.
+  var chart = new google.visualization.BarChart(document.getElementById('chartRow'));
+  chart.draw(data, options);
+}
+
 function drawCalendar(title, data) {
   var options = {'title': title,
-  'height':500,
   'noDataPattern': {
-             backgroundColor: '#87b574',
-             color: '#dff0d8'
-           }};
+    backgroundColor: '#87b574',
+    color: '#dff0d8'
+  }};
 
   var chart = new google.visualization.Calendar(document.getElementById('chartRow'));
   chart.draw(data, options);
@@ -152,9 +185,9 @@ function buildProfilesCreatedOn(chartInfo) {
 
   for(var row in chartInfo.rows) {
     var thisRow = chartInfo.rows[row];
-    data.addRow([new Date(thisRow.y, thisRow.m, thisRow.d), parseInt(thisRow.count)]);
+    data.addRow([new Date(thisRow.y, parseInt(thisRow.m)-1, thisRow.d), parseInt(thisRow.count)]);
   }
-  return data
+  return data;
 }
 
 document.getElementById("awardTypeComparison").addEventListener("click", function() {
@@ -177,4 +210,50 @@ function awardsByType(chartInfo) {
   }
   return data;
 }
+
+
+document.getElementById("awardsPerDay").addEventListener("click", function() {
+  fetch('business_analytics/query?queryName=awardsPerDay').then(function(response){
+    response.json().then(function(json){
+      console.log(json);
+      drawCalendar("Awards Per Day", awardsPerDay(json));
+    });
+  });
+});
+
+
+function awardsPerDay(chartInfo) {
+  var data = new google.visualization.DataTable();
+  data.addColumn({ type: 'date', id: 'Date' });
+  data.addColumn({ type: 'number', id: 'Count' });
+
+  for(var row in chartInfo.rows) {
+    var thisRow = chartInfo.rows[row];
+    data.addRow([new Date(thisRow.y, parseInt(thisRow.m)-1, thisRow.d), parseInt(thisRow.count)]);
+  }
+  return data;
+}
+
+document.getElementById("topThreeCreators").addEventListener("click", function() {
+  fetch('business_analytics/query?queryName=topThreeCreators').then(function(response){
+    response.json().then(function(json){
+      console.log(json);
+      drawBarChart("Top 3 Creators", topThreeCreators(json));
+    });
+  });
+});
+
+function topThreeCreators(chartInfo) {
+    var tempArr = [];
+    tempArr.push(["Name", "Awards", { role: "style" }]);
+    tempArr.push([chartInfo.rows[0].creator, parseInt(chartInfo.rows[0].count), "blue"]);
+    tempArr.push([chartInfo.rows[1].creator, parseInt(chartInfo.rows[1].count), "red"]);
+    tempArr.push([chartInfo.rows[2].creator, parseInt(chartInfo.rows[2].count), "green"]);
+
+
+  var data = google.visualization.arrayToDataTable(tempArr);
+
+return new google.visualization.DataView(data);
+}
+
 </script>

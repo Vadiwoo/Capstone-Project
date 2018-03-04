@@ -34,6 +34,16 @@ router.get('/query', (req, res) => {
       res.send(queryRes);
     });
     break;
+    case "awardsPerDay":
+    queryAwardsPerDay().then(function(queryRes) {
+      res.send(queryRes);
+    });
+    break;
+    case "topThreeCreators":
+    queryTopThreeCreators().then(function(queryRes) {
+      res.send(queryRes);
+    });
+    break;
     default:
   };
 });
@@ -63,4 +73,11 @@ function queryCreatedOnDays() {
   return db.query("SELECT date_part('year', access_date) y, date_part('month', access_date) m, date_part('day', access_date) d, COUNT (*) FROM employee GROUP BY (y,m,d)");
 }
 
+function queryAwardsPerDay() {
+  return db.query("SELECT date_part('year', award_created) y, date_part('month', award_created) m, date_part('day', award_created) d, COUNT (*) FROM award GROUP BY (y,m,d)");
+}
+
+function queryTopThreeCreators() {
+  return db.query('SELECT creator, COUNT(*) FROM award GROUP BY creator ORDER BY count DESC');
+}
 module.exports = router;

@@ -1,0 +1,26 @@
+<div class="jumbotron">
+  <div class="container">
+    <h2>Department Management</h2>
+  </div>
+</div>
+
+<div class="col-md-3">
+  <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Select Department
+  </button>
+  <div class="form-group col-md-4">
+    <label for="inputState">Department</label>
+    <select id="inputState" class="form-control">
+      <option selected>Choose...</option>
+      {{#each department_name}}
+      <option>{{this}}</option>
+      {{/each}}
+    </select>
+  </div>
+</div>
+</div>
+
+<div class="col-md-9">
+
+</div>

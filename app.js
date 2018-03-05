@@ -49,6 +49,12 @@ app.get('/admin_management', function(req,res){
   res.render('admin_management');
 });
 
+app.get('/department_management', function(req, res){
+  return db.query('SELECT award_name, COUNT(award_name) FROM award GROUP BY award_name');
+
+  res.render('department_management');
+});
+
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

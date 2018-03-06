@@ -4,57 +4,53 @@
   </div>
 </div>
 
-<div class="col-md-6 well">
-  <h2>Create New Department</h2>
-  <form action="/department_management" method="post">
-    <div class="form-row">
-      <label for="new_department_name" class="col-form-label">Department Name</label>
-      <input type="text" class="form-control" id="new_department_name" placeholder="Enter Desired Name">
-    </div>
-    <div class="form-row">
-      <button class="btn btn-primary btn-large btn-block" type="button" id="createDepartment" onclick="createDepartment()">Create Department</button>
-    </div>
-    <p class="text-danger" id="create_department_error"></p>
-  </form>
-  <div class="col-sm-12">
+<div class="row">
+  <div class="col-md-6 well">
+    <h2>Create New Department</h2>
+    <form action="/department_management" method="post">
+      <div class="form-row">
+        <label for="new_department_name" class="col-form-label">Department Name</label>
+        <input type="text" class="form-control" id="new_department_name" placeholder="Enter Desired Name">
+      </div>
+      <div class="form-row">
+        <button class="btn btn-primary btn-large btn-block" type="button" id="createDepartment" onclick="addDepartment()">Create Department</button>
+      </div>
+      <p class="text-danger" id="create_department_error"></p>
+    </form>
     <div class="alert alert-success" id="success-alert" hidden=true>
       <strong>Department Created!</strong>
     </div>
-  </div >
-</div>
-<div class="col-sm-12">
-  <div class="alert alert-danger" id="failure-alert" hidden=true>
-    <strong>Error Creating Department</strong>
-  </div>
-</div >
-</div>
-</div>
-
-<div class="col-md-6 well">
-  <h2>Delete Department</h2>
-  <div class="dropdown">
-    <div class="form-group col-md-12">
-      <label for="inputState">Department</label>
-      <select id="inputState" class="form-control">
-        <option selected>Select Department...</option>
-        {{#each department_name}}
-        <option id={{this}}>{{this}}</option>
-        {{/each}}
-      </select>
+    <div class="alert alert-danger" id="failure-alert" hidden=true>
+      <strong>Error Creating Department</strong>
     </div>
   </div>
-  <button class="btn btn-danger btn-large btn-block" type="button" id="deleteDepartment" onclick="deleteDepartment()">Delete Department</button>
-</br>
-<p><b>WARNING</b></p>
-<p>Users who belong to a deleted department will no longer belong to any department, and must be assigned to a department manually.</p>
+
+  <div class="col-md-6 well">
+    <h2>Delete Department</h2>
+    <div class="dropdown">
+      <div class="form-group col-md-12">
+        <label for="inputState">Department</label>
+        <select id="inputState" class="form-control">
+          <option selected>Select Department...</option>
+          {{#each department_name}}
+          <option id={{this}}>{{this}}</option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-danger btn-large btn-block" type="button" id="deleteDepartment" onclick="deleteDepartment()">Delete Department</button>
+  </br>
+  <p><b>WARNING</b></p>
+  <p>Users who belong to a deleted department will no longer belong to any department, and must be assigned to a department manually.</p>
+</div>
 </div>
 
 <script>
 
-function createDepartment() {
+function addDepartment() {
   data = {'department_name' : document.getElementById("new_department_name").value};
 
-  fetch('department__management', {
+  fetch('department_management', {
     body: JSON.stringify(data),
     method: 'POST',
     headers: {
@@ -62,8 +58,8 @@ function createDepartment() {
     },
   }).then(function(response) {
     if(!response.ok) {
-      if(response.status === 407){
-        document.getElementById("create_department_error").value = "Department already exists. Choose another name.";
+      if(response.status == 409){
+        document.getElementById("create_department_error").innerHTML = "Department already exists. Choose another name.";
       }
       alertCreateDepartmentFailure();
     } else {
@@ -84,4 +80,5 @@ function alertCreateDepartmentFailure() {
     $("#failure-alert").slideUp(500);
   });
 }
+
 </script>

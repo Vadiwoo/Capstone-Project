@@ -14,8 +14,14 @@ router.get('/', function(req, res){
 });
 
 router.post('/', function(req, res){
-  db.query("INSERT INTO department WHERE department_name = $1", [req.body.department_name]).then(function(dbResponse){
-    
+  console.log(req.body.department_name);
+  db.query("INSERT INTO department (department_name) VALUES($1)", [req.body.department_name], (err, results) => {
+    if(err && err.code == '23505') {
+      res.status(409).send();
+    }
+    else {
+      res.status(200).send();
+    }
   });
 });
 

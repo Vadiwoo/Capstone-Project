@@ -75,11 +75,18 @@ li a {
   margin-top: 15px;
 }
 
+#createDepartment {
+  margin-top: 15px;
+}
 
+#body {
+  padding-bottom: 7em;
+}
 
 #footer-row1 {
     padding: 1.5em 0;
     background: #232222;
+    height: 5em;
     width: 100%;
     position: fixed;
     bottom: 0;
@@ -111,4 +118,3 @@ li a {
         background-color: #ddd;
         color: black;
     }
-

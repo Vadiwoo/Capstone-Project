@@ -19,6 +19,7 @@ var userProfile = require('./routes/user-edit-profile');
 var deleteAward = require('./routes/user-delete-award');
 var dashBoard = require('./routes/dashboard')
 var businessAnalytics = require('./routes/business_analytics');
+var departmentManagement = require('./routes/department_management');
 var app = express();
 var spawn = require("child_process").spawn;
 var mu = require("mu2");
@@ -49,13 +50,6 @@ app.get('/admin_management', function(req,res){
   res.render('admin_management');
 });
 
-app.get('/department_management', function(req, res){
-  return db.query('SELECT award_name, COUNT(award_name) FROM award GROUP BY award_name');
-
-  res.render('department_management');
-});
-
-
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -72,6 +66,7 @@ app.use('/user-delete-award', deleteAward)
 app.use('/user', user);
 app.use('/sign-out', signOut);
 app.use('/business_analytics', businessAnalytics);
+app.use('/department_management', departmentManagement);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

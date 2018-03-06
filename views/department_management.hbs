@@ -33,7 +33,7 @@
         <select id="inputState" class="form-control">
           <option selected>Select Department...</option>
           {{#each department_name}}
-          <option id={{this}}>{{this}}</option>
+          <option value={{this}}>{{this}}</option>
           {{/each}}
         </select>
       </div>
@@ -42,6 +42,12 @@
   </br>
   <p><b>WARNING</b></p>
   <p>Users who belong to a deleted department will no longer belong to any department, and must be assigned to a department manually.</p>
+  <div class="alert alert-success" id="delete-success-alert" hidden=true>
+    <strong>Department Deleted!</strong>
+  </div>
+  <div class="alert alert-danger" id="delete-failure-alert" hidden=true>
+    <strong>Error Deleting Department</strong>
+  </div>
 </div>
 </div>
 
@@ -65,8 +71,35 @@ function addDepartment() {
     } else {
       document.getElementById("create_department_error").value = "";
       alertCreateDepartmentSuccess();
+      addToDropdown(data.department_name);
     }
   });
+}
+
+function deleteDepartment() {
+  data = document.getElementById("inputState").value;
+
+  fetch('department_management/'+ data, {
+    method: 'DELETE'
+  }).then(function(response) {
+    if(!response.ok) {
+      alertDeleteDepartmentFailure();
+    } else {
+      alertDeleteDepartmentSuccess();
+      removeFromDropdown(data);
+    }
+  });
+}
+
+//code from https://stackoverflow.com/questions/375508/removing-an-item-from-a-select-box
+function addToDropdown(newOption) {
+  console.log(newOption);
+  $("#inputState").append('<option value='+newOption+ '>' + newOption + '</option>');
+}
+
+function removeFromDropdown(option) {
+  console.log(option);
+  $("#inputState option[value='" + option + "']").remove();
 }
 
 function alertCreateDepartmentSuccess() {
@@ -81,4 +114,15 @@ function alertCreateDepartmentFailure() {
   });
 }
 
+function alertDeleteDepartmentSuccess() {
+  $("#delete-success-alert").fadeTo(2000, 500).slideUp(500, function(){
+    $("#delete-success-alert").slideUp(500);
+  });
+}
+
+function alertDeleteDepartmentFailure() {
+  $("#delete-failure-alert").fadeTo(2000, 500).slideUp(500, function(){
+    $("#delete-failure-alert").slideUp(500);
+  });
+}
 </script>

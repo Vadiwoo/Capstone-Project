@@ -25,8 +25,16 @@ router.post('/', function(req, res){
   });
 });
 
-router.delete('/', function(req, res){
+router.delete('/:department_name', function(req, res){
 
+  db.query("DELETE FROM department WHERE department_name = $1", [req.params.department_name], (err, results) => {
+    if(err) {
+      res.status(500).send();
+    } else {
+      res.status(200).send();
+    }
+
+  });
 });
 
 module.exports = router;

@@ -1,8 +1,12 @@
 const express = require('express');
 const router = express.Router();
-
+var multer = require("multer");
+var fs = require("fs");
 const db = require('../db')
 var bcrypt = require('bcrypt');
+const upload = multer({
+  dest: '../uploads/' // this saves your file into a directory called "uploads"
+});
 
 /* GET users listing. */
 router.get('/:userEmail', function(req,res){
@@ -18,6 +22,36 @@ router.get('/:userEmail', function(req,res){
       res.send(payload);
     }
   });
+});
+
+//code taken directly from https://www.thepolyglotdeveloper.com/2016/02/convert-an-uploaded-image-to-a-base64-string-in-node-js/
+router.post("/upload/signature", upload.single('file'), function(req, res) {
+    var fileInfo = [];
+    console.log(req);
+    console.log("first statement");
+    console.log(req.file.originalName);
+    console.log("second statement");
+
+    console.log(req.file.size);
+    console.log("third statement");
+
+    console.log(req.file.path);
+        fileInfo.push({
+            "originalName": req.file.originalname,
+            "size": req.file.size,
+            "b64": new Buffer(fs.readFileSync(req.file.path)).toString("base64")
+        });
+        fs.unlink(req.file.path);
+
+    console.log(fileInfo);
+    db.query("UPDATE employee SET signature = $1 WHERE employee.employee_email = 'a.r.kittrell@gmail.com'", [fileInfo], (err, results) => {
+      if(err) {
+        console.log(err);
+      }
+      else {
+        res.status(200).send("Finished");
+      }
+    });
 });
 
 router.post('/', function(req,res){

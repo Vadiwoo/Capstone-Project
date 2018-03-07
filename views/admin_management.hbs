@@ -37,7 +37,7 @@
 </div>
 
 <div class="col-md-9 well">
-  <form action="/user" method="post">
+  <form action="/user" method="post" id="mainForm">
     <div class="form-row">
       <div class="form-group col-md-6">
         <label for="firstName" class="col-form-label">First Name</label>
@@ -63,29 +63,36 @@
       <div class="form-group col-md-3">
         <label>Administrator?</label>
         <div class="form-check">
-          <input class="form-check-input" name="isAdmin" type="radio" value="yes" id="isAdminYes" disabled=true>
+          <input class="form-check-input" name="isAdmin" type="radio" value="admin" id="isAdminYes" disabled=true>
           <label class="form-check-label" for="defaultCheck1">Yes</label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" name="isAdmin" type="radio" value="no" id="isAdminNo" disabled=true>
+          <input class="form-check-input" name="isAdmin" type="radio" value="user" id="isAdminNo" disabled=true>
           <label class="form-check-label" for="defaultCheck1">No</label>
         </div>
       </div>
-      <div class="form-group col-md-9">
-        <div class="input-group mb-3">
+      <div class="form-group col-md-6">
           <div class="input-group-prepend">
             <span class="input-group-text"><b>Add/Update Signiture</b></span>
           </div>
           <div class="custom-file">
-            <input type="file" class="custom-file-input" id="signatureFile">
+            <input type="file" class="custom-file-input" id="signatureFile" disabled=true>
             <!-- <label class="custom-file-label" for="signatureFile">Choose file</label> -->
           </div>
-        </div>
+      </div>
+      <div class="form-group col-md-3">
+        <label for="inputState">Department</label>
+        <select id="inputState" class="form-control" disabled=true>
+          <option selected>Select Department...</option>
+          {{#each department_name}}
+          <option value={{this}}>{{this}}</option>
+          {{/each}}
+        </select>
       </div>
     </div>
     <div class="form-row">
       <div class="form-group col-md-12">
-        <button class="btn btn-default" type="button" onclick="submitForm()" id=submitButton disabled=true>Save</button>
+        <button class="btn btn-default" type="button" onclick="editUser()" id=submitButton disabled=true>Save</button>
         <button class="btn btn-default" type="button" id="editButton" onclick="editToggledOn()" disabled=true>Edit</button>
         <button class="btn btn-default"  type="button" id="cancelEditButton" onclick="cancelEdit()" disabled=true>Cancel</button>
         <button class="btn btn-danger pull-right" type="button" id="deleteButton" onclick="deleteUserProfile()" disabled=true>Delete Profile</button>
@@ -121,21 +128,28 @@ function userSearch(){
   }
 }
 
-function submitForm() {
+function createNewUser() {
+  submitForm(true);
+}
+
+function editUser() {
+  submitForm(false);
+}
+
+//isNew determines if this is a NEW user, or if we are editing an old one.
+function submitForm(isNew) {
   disableSubmitButton();
 
-  var type;
-  if((document.getElementById("isAdminYes")).selected === true) {
-    type = "admin";
-  } else {
-    type = "user";
-  }
+// code modified from http://www.jquerybyexample.net/2012/06/check-if-radio-button-is-checked-or.html
+  var type = $('input[name=isAdmin]:checked', '#mainForm').val();
 
   formData = {
     "firstName" : (document.getElementById("firstName")).value,
     "lastName" : (document.getElementById("lastName")).value,
     "email" : (document.getElementById("email")).value,
     "password" : document.getElementById("password").value,
+    "department_name" : document.getElementById("inputState").value,
+    "isNew" : isNew,
     "type" : type
   };
 
@@ -162,7 +176,6 @@ function createUserButton(){
   document.getElementById("email").disabled = false;
 
   clearAllInputs();
-
 }
 
 function deleteUserProfile() {
@@ -172,6 +185,7 @@ function deleteUserProfile() {
   xhttp.onreadystatechange = function() {
     if(this.readyState == 4 && this.status == 200) {
       console.log("Successfully deleted user!")
+      clearAllInputs();
       enableFormInputs();
       disableEditButton();
       alertSuccess();
@@ -198,7 +212,7 @@ function editToggledOn() {
   enableSubmitButton();
   enableCancelEditButton();
   disableEditButton();
-
+  enableDeleteButton()
   enableFormInputs();
 }
 
@@ -206,7 +220,7 @@ function cancelEdit() {
   disableSubmitButton();
   enableEditButton();
   disableCancelEditButton();
-
+  disableDeleteButton();
   disableFormInputs();
 }
 
@@ -221,6 +235,9 @@ function populateFormDisabled(json){
   } else {
     document.getElementById("isAdminNo").checked = true;
   }
+
+  $( "#inputState" ).val(json.department_name);
+
   disableFormInputs();
 }
 
@@ -239,6 +256,7 @@ function disableFormInputs() {
   document.getElementById("email").disabled = true;
   document.getElementById("isAdminYes").disabled = true;
   document.getElementById("isAdminNo").disabled = true;
+  disableDepartments();
 }
 
 function enableFormInputs() {
@@ -247,6 +265,7 @@ function enableFormInputs() {
   document.getElementById("password").disabled = false;
   document.getElementById("isAdminYes").disabled = false;
   document.getElementById("isAdminNo").disabled = false;
+  enableDepartments();
 }
 
 function enableCancelEditButton() {
@@ -281,4 +300,11 @@ function enableSubmitButton() {
   document.getElementById("submitButton").disabled = false;
 }
 
+function enableDepartments() {
+  document.getElementById("inputState").disabled = false;
+}
+
+function disableDepartments() {
+  document.getElementById("inputState").disabled = true;
+}
 </script>

@@ -7,7 +7,7 @@ var bcrypt = require('bcrypt');
 /* GET users listing. */
 router.get('/:userEmail', function(req,res){
   var payload;
-  db.query('SELECT * FROM employee WHERE employee_email = $1',[req.params.userEmail], (err, results) => {
+  db.query('SELECT * FROM employee LEFT JOIN department ON employee.department_id = department.department_id WHERE employee_email = $1',[req.params.userEmail], (err, results) => {
     // console.log(req.params.userEmail);
     if(results.rowCount === 0) {
       console.log("rowcount is 0");
@@ -26,8 +26,8 @@ router.post('/', function(req,res){
   bcrypt.genSalt(10, function (err, salt) {
     bcrypt.hash(req.body.password, salt, function (err, hash) {
       // Store hash in your password DB.
-      db.query("INSERT INTO employee (employee_first_name, employee_last_name, employee_email, employee_type, employee_password, access_date) VALUES($1, $2, $3, $4, $5, $6) ON CONFLICT (employee_email) DO UPDATE SET employee_first_name = EXCLUDED.employee_first_name, employee_last_name = EXCLUDED.employee_last_name, employee_email = EXCLUDED.employee_email, employee_type = EXCLUDED.employee_type, employee_password = EXCLUDED.employee_password WHERE employee.employee_email = $3", [
-        req.body.firstName, req.body.lastName, req.body.email, req.body.type, hash, (new Date()).toISOString()
+      db.query("INSERT INTO employee (employee_first_name, employee_last_name, employee_email, employee_type, employee_password, access_date, department_id) VALUES($1, $2, $3, $4, $5, $6, (SELECT department_id FROM department WHERE department_name = $7)) ON CONFLICT (employee_email) DO UPDATE SET employee_first_name = EXCLUDED.employee_first_name, employee_last_name = EXCLUDED.employee_last_name, employee_email = EXCLUDED.employee_email, employee_type = EXCLUDED.employee_type, employee_password = EXCLUDED.employee_password WHERE employee.employee_email = $3", [
+        req.body.firstName, req.body.lastName, req.body.email, req.body.type, hash, (new Date()).toISOString(), req.body.department_name
       ], (err, results) => {
         if(!err) {
           res.status(200).send("User added/updated");

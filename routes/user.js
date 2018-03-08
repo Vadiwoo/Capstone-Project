@@ -47,6 +47,7 @@ router.post('/', function(req,res){
   console.log(req.body);
   //we'll need to hash the password if it is new
   if(req.body.isNew == true){
+    console.log("creating new user");
     bcrypt.genSalt(10, function (err, salt) {
       bcrypt.hash(req.body.password, salt, function (err, hash) {
         // Store hash in your password DB.
@@ -63,9 +64,10 @@ router.post('/', function(req,res){
       });
     });
   } else {
+    console.log("editing user");
     //if there's a new password, hash it and upload everything.
       if(req.body.password ==='') {
-        db.query('UPDATE employee SET (employee_first_name, employee_last_name, employee_email, employee_type, department_id)', [req.body.firstName, req.body.lastName,req.body.email, req.body.type,req.body.department_name], (err, results) =>{
+        db.query('UPDATE employee SET employee_first_name = $1, employee_last_name = $2, employee_type =$3, department_id=(SELECT department_id FROM department WHERE department_name = $4) WHERE employee_email = $5', [req.body.firstName, req.body.lastName, req.body.type,req.body.department_name, req.body.email], (err, results) =>{
           if(!err) {
             res.status(200).send("User updated");
           } else{
@@ -74,7 +76,19 @@ router.post('/', function(req,res){
           }
         });
       } else {
-        
+        bcrypt.genSalt(10, function (err, salt) {
+          bcrypt.hash(req.body.password, salt, function (err, hash) {
+            // Store hash in your password DB.
+            db.query("UPDATE employee SET employee_first_name = $1, employee_last_name = $2, employee_type =$3, department_id=$4, employee_password = $5 WHERE employee_email = $6", [req.body.firstName, req.body.lastName, req.body.type,req.body.department_name, hash, req.body.email], (err, results) => {
+              if(!err) {
+                res.status(200).send("User updated");
+              } else{
+                console.log(err);
+                res.status(500).send("Unknown server error when inserting/updating");
+              }
+            });
+          });
+        });
       }
     //else if there's no update to teh password, upload everything EXCEPT the password
   }

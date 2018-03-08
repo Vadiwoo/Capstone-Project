@@ -32,6 +32,8 @@
 <div class="row">
   <div class="col-md-12">
     <h2>Add Signiture</h2>
+    <p>Attach a signature to a user by entering a user's email into the box below. </br>Note: you are able to upload signatures to both admins and users, but only users will be able to create a certificate with the signature.</p>
+  </br>
     <form method="post" name="signature" enctype="multipart/form-data">
       <label for="email" class="col-form-label">Account Email</label>
       <input type="email" class="form-control" id="sig_email" name="email" placeholder="Email" required>
@@ -101,10 +103,11 @@
     </div>
     <div class="form-row">
       <div class="form-group col-md-12">
-        <button class="btn btn-default" type="button" onclick="editUser()" id=submitButton disabled=true>Save</button>
+        <button class="btn btn-default" type="button" onclick="createNewUser()" id=submitButton disabled=true>Save</button>
         <button class="btn btn-default" type="button" id="editButton" onclick="editToggledOn()" disabled=true>Edit</button>
         <button class="btn btn-default"  type="button" id="cancelEditButton" onclick="cancelEdit()" disabled=true>Cancel</button>
         <button class="btn btn-danger pull-right" type="button" id="deleteButton" onclick="deleteUserProfile()" disabled=true>Delete Profile</button>
+        <input type="hidden" name="isNew" id="isNew" value="">
       </div>
     </div>
   </form>
@@ -169,11 +172,12 @@ function userSearch(){
 }
 
 function createNewUser() {
-  submitForm(true);
-}
-
-function editUser() {
-  submitForm(false);
+  console.log(document.getElementById("isNew").value);
+  if(document.getElementById("isNew").value = "false"){
+    submitForm(false);
+  } else {
+    submitForm(true);
+  }
 }
 
 //isNew determines if this is a NEW user, or if we are editing an old one.
@@ -200,9 +204,10 @@ function submitForm(isNew) {
       disableFormInputs();
       enableEditButton();
       alertSuccess();
-    } else {
+    } else if(this.readyState == 4 && this.status != 200){
       alertFailure();
     }
+    document.getElementById("isNew").value = "";
   };
   xhttp.open("POST", "/user");
   xhttp.setRequestHeader("Content-type", "application/json");
@@ -216,7 +221,7 @@ function createUserButton(){
   enableCancelEditButton();
   enableFormInputs();
   document.getElementById("email").disabled = false;
-
+  document.getElementById("isNew").value = "true";
   clearAllInputs();
 }
 
@@ -274,6 +279,7 @@ function editToggledOn() {
   disableEditButton();
   enableDeleteButton()
   enableFormInputs();
+  document.getElementById("isNew").value = "false";
 }
 
 function cancelEdit() {
@@ -282,12 +288,14 @@ function cancelEdit() {
   disableCancelEditButton();
   disableDeleteButton();
   disableFormInputs();
+  document.getElementById("isNew").value = " ";
+
 }
 
 function populateFormDisabled(json){
   document.getElementById("firstName").value = json.employee_first_name;
   document.getElementById("lastName").value = json.employee_last_name;
-  document.getElementById("password").value = json.employee_password;
+  document.getElementById("password").value = "";
   document.getElementById("email").value = json.employee_email;
 
   if (json.employee_type == "admin") {

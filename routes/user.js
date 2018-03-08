@@ -5,13 +5,13 @@ var fs = require("fs");
 const db = require('../db')
 var bcrypt = require('bcrypt');
 const upload = multer({
-  dest: '../uploads/' // this saves your file into a directory called "uploads"
+  dest: './public/temp_signature'
 });
 
 /* GET users listing. */
 router.get('/:userEmail', function(req,res){
   var payload;
-  db.query('SELECT * FROM employee LEFT JOIN department ON employee.department_id = department.department_id WHERE employee_email = $1',[req.params.userEmail], (err, results) => {
+  db.query('SELECT employee_first_name, employee_last_name, employee_email, employee_type FROM employee LEFT JOIN department ON employee.department_id = department.department_id WHERE employee_email = $1',[req.params.userEmail], (err, results) => {
     // console.log(req.params.userEmail);
     if(results.rowCount === 0) {
       console.log("rowcount is 0");
@@ -24,38 +24,31 @@ router.get('/:userEmail', function(req,res){
   });
 });
 
-//code taken directly from https://www.thepolyglotdeveloper.com/2016/02/convert-an-uploaded-image-to-a-base64-string-in-node-js/
+//modified from http://stackabuse.com/encoding-and-decoding-base64-strings-in-node-js/#encodingbinarydatatobase64strings
 router.post("/upload/signature", upload.single('file'), function(req, res) {
-    var fileInfo = [];
-    console.log(req);
-    console.log("first statement");
-    console.log(req.file.originalName);
-    console.log("second statement");
+    'use strict';
+console.log(req.body);
 
-    console.log(req.file.size);
-    console.log("third statement");
+    let buff = fs.readFileSync(req.file.path);
+    let base64File = buff.toString('base64');
 
-    console.log(req.file.path);
-        fileInfo.push({
-            "originalName": req.file.originalname,
-            "size": req.file.size,
-            "b64": new Buffer(fs.readFileSync(req.file.path)).toString("base64")
-        });
-        fs.unlink(req.file.path);
-
-    console.log(fileInfo);
-    db.query("UPDATE employee SET signature = $1 WHERE employee.employee_email = 'a.r.kittrell@gmail.com'", [fileInfo], (err, results) => {
+    db.query("UPDATE employee SET signature = $1 WHERE employee.employee_email = $2", [base64File, req.body.email], (err, results) => {
       if(err) {
         console.log(err);
       }
       else {
         res.status(200).send("Finished");
       }
+      console.log("unlinked file");
+      fs.unlink(req.file.path);
     });
 });
 
 router.post('/', function(req,res){
   console.log(req.body);
+  if(req.body.isNew == true){
+
+  }
 
   bcrypt.genSalt(10, function (err, salt) {
     bcrypt.hash(req.body.password, salt, function (err, hash) {

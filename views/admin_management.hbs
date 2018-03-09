@@ -1,11 +1,10 @@
 <div>
-    <ul>
-        <li><a href="/sign-out">Sign Out</a></li>
-        <li><a href="#">Analytics</a></li>
-        <li><a href="/admin_management">Admin Management</a></li>
-        <li><a href="/dashboard">Dashboard</a></li>
-
-    </ul>
+  <ul>
+    <li><a href="/sign-out">Sign Out</a></li>
+    <li><a href="#">Analytics</a></li>
+    <li><a href="/admin_management">Admin Management</a></li>
+    <li><a href="/dashboard">Dashboard</a></li>
+  </ul>
 </div>
 <br />
 <div class="jumbotron">
@@ -31,14 +30,34 @@
   </div><!-- /.col-lg-6 -->
 </div>
 <div class="row">
-  <div class-"col-lg-12">
-    <button class="btn btn-primary btn-large btn-block" type="button" id="createUser" onclick="createUserButton()">Create User</button>
+  <div class="col-md-12">
+    <h2>Add Signiture</h2>
+    <p>Attach a signature to a user by entering a user's email into the box below. </br>Note: you are able to upload signatures to both admins and users, but only users will be able to create a certificate with the signature.</p>
+  </br>
+    <form method="post" name="signature" enctype="multipart/form-data">
+      <label for="email" class="col-form-label">Account Email</label>
+      <input type="email" class="form-control" id="sig_email" name="email" placeholder="Email" required>
+     <div>
+       <label for="file">Choose file to upload</label>
+       <input type="file" id="file" name="file" accept=".jpg, .jpeg, .png">
+     </div>
+     <div>
+     </br>
+       <button type="submit" class="btn btn-primary" id="submitSignature">Submit</button>
+     </div>
+     <div class="alert alert-success" id="signiture-success" hidden=true>
+       <strong>Success!</strong>
+     </div>
+     <div class="alert alert-danger" id="signature-failure" hidden=true>
+       <strong>Error Uploading Signature!</strong>
+     </div>
+    </form>
   </div>
 </div>
 </div>
 
 <div class="col-md-9 well">
-  <form action="/user" method="post">
+  <form action="/user" method="post" id="mainForm">
     <div class="form-row">
       <div class="form-group col-md-6">
         <label for="firstName" class="col-form-label">First Name</label>
@@ -57,8 +76,6 @@
       <div class="form-group col-md-6">
         <label for="password" class="col-form-label">Password</label>
         <input type="password" class="form-control" id="password" placeholder="Password" disabled=true>
-        <input class="form-check-input" name="showPassword" type="checkbox" id=showPassword>
-        <label class="form-check-label" for="showPassword">Show Password</label>
       </div>
 
     </div>
@@ -66,33 +83,74 @@
       <div class="form-group col-md-3">
         <label>Administrator?</label>
         <div class="form-check">
-          <input class="form-check-input" name="isAdmin" type="radio" value="yes" id="isAdminYes" disabled=true>
+          <input class="form-check-input" name="isAdmin" type="radio" value="admin" id="isAdminYes" disabled=true>
           <label class="form-check-label" for="defaultCheck1">Yes</label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" name="isAdmin" type="radio" value="no" id="isAdminNo" disabled=true>
+          <input class="form-check-input" name="isAdmin" type="radio" value="user" id="isAdminNo" disabled=true>
           <label class="form-check-label" for="defaultCheck1">No</label>
         </div>
+      </div>
+      <div class="form-group col-md-3">
+        <label for="inputState">Department</label>
+        <select id="inputState" class="form-control" disabled=true>
+          <option selected>Select Department...</option>
+          {{#each department_name}}
+          <option value={{this}}>{{this}}</option>
+          {{/each}}
+        </select>
       </div>
     </div>
     <div class="form-row">
       <div class="form-group col-md-12">
-        <button class="btn btn-default" type="button" onclick="submitForm()" id=submitButton disabled=true>Save</button>
+        <button class="btn btn-default" type="button" onclick="createNewUser()" id=submitButton disabled=true>Save</button>
         <button class="btn btn-default" type="button" id="editButton" onclick="editToggledOn()" disabled=true>Edit</button>
         <button class="btn btn-default"  type="button" id="cancelEditButton" onclick="cancelEdit()" disabled=true>Cancel</button>
         <button class="btn btn-danger pull-right" type="button" id="deleteButton" onclick="deleteUserProfile()" disabled=true>Delete Profile</button>
+        <input type="hidden" name="isNew" id="isNew" value="">
       </div>
     </div>
   </form>
+  <div class="row">
+    <div class-"col-lg-12">
+      <button class="btn btn-primary btn-large btn-block" type="button" id="createUser" onclick="createUserButton()">Create User</button>
+    </div>
+  </div>
   <div class="col-sm-12">
     <div class="alert alert-success" id="success-alert" hidden=true>
       <strong>Success!</strong>
+    </div>
+    <div class="alert alert-danger" id="failure-alert" hidden=true>
+      <strong>Error Submitting User Info!</strong>
     </div>
   </div >
 </div>
 </div>
 
 <script>
+
+//https://developer.mozilla.org/en-US/docs/Web/API/FormData/Using_FormData_Objects
+var form = document.forms.namedItem("signature");
+form.addEventListener('submit', function(ev) {
+
+  var oData = new FormData(form);
+
+  var oReq = new XMLHttpRequest();
+  oReq.open("POST", "/user/upload/signature", true);
+  oReq.onload = function(oEvent) {
+    if (oReq.status == 200) {
+      alertSignatureSuccess();
+      console.log("Uploaded!");
+    } else {
+      alertSignatureFailure();
+      console.log("Error " + oReq.status + " occurred when trying to upload your file.");
+    }
+  };
+
+  oReq.send(oData);
+  ev.preventDefault();
+}, false);
+
 function userSearch(){
   var userEmail = document.getElementById("userSearch");
   if(userEmail.value != ""){
@@ -113,21 +171,29 @@ function userSearch(){
   }
 }
 
-function submitForm() {
+function createNewUser() {
+  console.log(document.getElementById("isNew").value);
+  if(document.getElementById("isNew").value = "false"){
+    submitForm(false);
+  } else {
+    submitForm(true);
+  }
+}
+
+//isNew determines if this is a NEW user, or if we are editing an old one.
+function submitForm(isNew) {
   disableSubmitButton();
 
-  var type;
-  if((document.getElementById("isAdminYes")).selected === true) {
-    type = "admin";
-  } else {
-    type = "user";
-  }
+// code modified from http://www.jquerybyexample.net/2012/06/check-if-radio-button-is-checked-or.html
+  var type = $('input[name=isAdmin]:checked', '#mainForm').val();
 
   formData = {
     "firstName" : (document.getElementById("firstName")).value,
     "lastName" : (document.getElementById("lastName")).value,
     "email" : (document.getElementById("email")).value,
     "password" : document.getElementById("password").value,
+    "department_name" : document.getElementById("inputState").value,
+    "isNew" : isNew,
     "type" : type
   };
 
@@ -138,7 +204,10 @@ function submitForm() {
       disableFormInputs();
       enableEditButton();
       alertSuccess();
+    } else if(this.readyState == 4 && this.status != 200){
+      alertFailure();
     }
+    document.getElementById("isNew").value = "";
   };
   xhttp.open("POST", "/user");
   xhttp.setRequestHeader("Content-type", "application/json");
@@ -149,11 +218,11 @@ function createUserButton(){
   enableSubmitButton();
   disableDeleteButton();
   disableEditButton();
+  enableCancelEditButton();
   enableFormInputs();
   document.getElementById("email").disabled = false;
-
+  document.getElementById("isNew").value = "true";
   clearAllInputs();
-
 }
 
 function deleteUserProfile() {
@@ -163,6 +232,7 @@ function deleteUserProfile() {
   xhttp.onreadystatechange = function() {
     if(this.readyState == 4 && this.status == 200) {
       console.log("Successfully deleted user!")
+      clearAllInputs();
       enableFormInputs();
       disableEditButton();
       alertSuccess();
@@ -177,6 +247,7 @@ function deleteUserProfile() {
   xhttp.setRequestHeader("Content-type", "application/json");
   xhttp.send(JSON.stringify(data));
 }
+
 // help from https://stackoverflow.com/questions/23101966/bootstrap-alert-auto-close
 function alertSuccess() {
   $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
@@ -184,26 +255,47 @@ function alertSuccess() {
   });
 }
 
+function alertFailure() {
+  $("#failure-alert").fadeTo(2000, 500).slideUp(500, function(){
+    $("#failure-alert").slideUp(500);
+  });
+}
+
+function alertSignatureSuccess(){
+  $("#signature-success").fadeTo(2000, 500).slideUp(500, function(){
+    $("#signature-success").slideUp(500);
+  });
+}
+
+function alertSignatureFailure() {
+  $("#signature-failure").fadeTo(2000, 500).slideUp(500, function(){
+    $("#signature-failure").slideUp(500);
+  });
+}
+
 function editToggledOn() {
   enableSubmitButton();
   enableCancelEditButton();
   disableEditButton();
-
+  enableDeleteButton()
   enableFormInputs();
+  document.getElementById("isNew").value = "false";
 }
 
 function cancelEdit() {
   disableSubmitButton();
   enableEditButton();
   disableCancelEditButton();
-
+  disableDeleteButton();
   disableFormInputs();
+  document.getElementById("isNew").value = " ";
+
 }
 
 function populateFormDisabled(json){
   document.getElementById("firstName").value = json.employee_first_name;
   document.getElementById("lastName").value = json.employee_last_name;
-  document.getElementById("password").value = json.employee_password;
+  document.getElementById("password").value = "";
   document.getElementById("email").value = json.employee_email;
 
   if (json.employee_type == "admin") {
@@ -211,6 +303,9 @@ function populateFormDisabled(json){
   } else {
     document.getElementById("isAdminNo").checked = true;
   }
+
+  $( "#inputState" ).val(json.department_name);
+
   disableFormInputs();
 }
 
@@ -229,6 +324,7 @@ function disableFormInputs() {
   document.getElementById("email").disabled = true;
   document.getElementById("isAdminYes").disabled = true;
   document.getElementById("isAdminNo").disabled = true;
+  disableDepartments();
 }
 
 function enableFormInputs() {
@@ -237,6 +333,7 @@ function enableFormInputs() {
   document.getElementById("password").disabled = false;
   document.getElementById("isAdminYes").disabled = false;
   document.getElementById("isAdminNo").disabled = false;
+  enableDepartments();
 }
 
 function enableCancelEditButton() {
@@ -271,4 +368,11 @@ function enableSubmitButton() {
   document.getElementById("submitButton").disabled = false;
 }
 
+function enableDepartments() {
+  document.getElementById("inputState").disabled = false;
+}
+
+function disableDepartments() {
+  document.getElementById("inputState").disabled = true;
+}
 </script>

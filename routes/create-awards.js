@@ -77,7 +77,7 @@ router.post('/', (req, res) => {
 							//Creates the pdf from the tex document with latexmk found within the texLive buildpack
 							var pdfLatex = spawn("latexmk", ["-outdir=" + latexFolder, "-pdf", file]);
 							pdfLatex.stdout.on("end", function (data) {
-								console.log("file should have been creted");
+								console.log("file should have been created");
 								// Generate SMTP service account from ethereal.email to send PDF
 								var pdfFileName = winLast + date + '.pdf';
 								console.log('before test accounts');
@@ -130,6 +130,7 @@ router.post('/', (req, res) => {
 										console.log('Message sent successfully!');
 										console.log(nodemailer.getTestMessageUrl(info));
 										var url = nodemailer.getTestMessageUrl(info);
+										res.render('send-award', {message: " " + url, succesful_message: "Your Award Profile has been Sent Successfully!" });
 									});
 								});
 
@@ -137,8 +138,8 @@ router.post('/', (req, res) => {
 							}).on('error', function(error) {
 								console.log("ERROR");
 								console.log(error);
+								res.status(500).send();
 							});
-							res.render('send-award', {message: "URL HERE", succesful_message: "Your Award Profile has been Sent Successfully!" });
 						}
 					});
 				});

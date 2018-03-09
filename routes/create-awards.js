@@ -75,7 +75,7 @@ router.post('/', (req, res) => {
 						} else {
 							console.log("right before spawn");
 							//Creates the pdf from the tex document with latexmk found within the texLive buildpack
-							var pdfLatex = spawn("latexmk", ["-outdir=" + latexFolder, "-pdf", file]);
+							var pdfLatex = spawn("latexmk", ["-halt-on-error -outdir=" + latexFolder, "-pdf", file]);
 							pdfLatex.stdout.on("end", function (data) {
 								console.log("file should have been created");
 								// Generate SMTP service account from ethereal.email to send PDF
@@ -135,11 +135,7 @@ router.post('/', (req, res) => {
 								});
 
 
-							}).on('error', function(error) {
-								console.log("ERROR");
-								console.log(error);
-								res.status(500).send();
-							});
+							})
 						}
 					});
 				});

@@ -1,2 +1,5 @@
-Added logo,
-Added nav bar for user and admin
+Update to Andrews branch
+
+New create.awards.hbs (no creator input, no time: auto-added, newer certificate display)
+New create-awards.js (using db query for creator, added recipient first name to db, complete code with mail, added console.logs, utilizing /app/public/images path)
+New image folder (deleted the texfolder so only one path needed for PDF production)

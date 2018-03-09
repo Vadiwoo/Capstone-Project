@@ -65,7 +65,7 @@ router.post('/', (req, res) => {
 					var latexFolder = "./public/images/texFolder";
 					var file = path.join(latexFolder, (winLast + date + ".tex"));
 					var fileName = (winLast + date + ".tex");
-
+					console.log("full file name = " + file);
 					//Create the rendered file and compile
 					fs.writeFile(file, string, function (err) {
 						if (err) {

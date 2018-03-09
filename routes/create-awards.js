@@ -67,6 +67,7 @@ router.post('/', (req, res) => {
 					var fileName = (winLast + date + ".tex");
 					console.log("full file name = " + file);
 					//Create the rendered file and compile
+					'use strict';
 					fs.writeFile(file, string, function (err) {
 						if (err) {
 

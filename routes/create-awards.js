@@ -77,9 +77,10 @@ console.log('before first query');
 							//Creates the pdf from the tex document with latexmk found within the texLive buildpack
 							var pdfLatex = spawn("latexmk", ["-outdir=" + latexFolder, "-pdf", file]);
 							pdfLatex.stdout.on("end", function (data) {
-
+								console.log("file should have been creted");
 								// Generate SMTP service account from ethereal.email to send PDF
 								var pdfFileName = winLast + date + '.pdf';
+								console.log('before test accounts');
 								nodemailer.createTestAccount((err, account) => {
 									if (err) {
 										console.error('Failed to create a testing account');
@@ -88,6 +89,7 @@ console.log('before first query');
 									}
 									//console.log('Credentials obtained, sending message...');
 									// Create a SMTP transporter object
+
 									let transporter = nodemailer.createTransport({
 										host: account.smtp.host,
 										port: account.smtp.port,
@@ -117,7 +119,7 @@ console.log('before first query');
 											}
 										]
 									};
-
+									console.log("sending mail");
 									transporter.sendMail(message, (error, info) => {
 										if (error) {
 											console.log('Error occurred');
@@ -128,13 +130,12 @@ console.log('before first query');
 										console.log('Message sent successfully!');
 										console.log(nodemailer.getTestMessageUrl(info));
 										var url = nodemailer.getTestMessageUrl(info);
-										res.render('send-award', {message: " " + url, succesful_message: "Your Award Profile has been Updated Successfully!" });
-
 									});
 								});
 
 
 							});
+							res.render('send-award', {message: " " + url, succesful_message: "Your Award Profile has been Sent Successfully!" });
 						}
 
 					});

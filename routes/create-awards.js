@@ -135,7 +135,7 @@ console.log('before first query');
 
 
 							});
-							res.render('send-award', {message: " " + url, succesful_message: "Your Award Profile has been Sent Successfully!" });
+							res.render('send-award', {message: "URL HERE", succesful_message: "Your Award Profile has been Sent Successfully!" });
 						}
 
 					});

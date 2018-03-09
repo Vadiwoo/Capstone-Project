@@ -23,13 +23,13 @@ router.post('/', (req, res) => {
 	var winLast = req.body.winnerLastName;
 	var winEmail = req.body.winnerEmail;
 	var date = req.body.dateCreated;
-	var creatorFirst= req.body.creatorFirstName;
-	var creatorLast = req.body.creatorLastName
+	var creatorFirst;
+	var creatorLast;
 	var employee_id;
 
 	//folder with the images used for the latex document creation
 	var string = "";
-	var templateFolder = "./public/images/";
+	var templateFolder = "/app/public/images/";
 	console.log('before first query');
 	//getting award creator id
 	db.query('SELECT * FROM employee WHERE employee_email = $1',[req.session.username], (err, results) => {
@@ -40,13 +40,13 @@ router.post('/', (req, res) => {
 		else {
 
 			employee_id = results.rows[0].employee_id;
-			// creatorFirst =  results.rows[0].employee_first_name;
-			//  creatorLast = results.rows[0].employee_last_name;
+			creatorFirst =  results.rows[0].employee_first_name;
+			creatorLast = results.rows[0].employee_last_name;
 		}
 
 		console.log("before second query");
 		//inserting award into database
-		db.query("INSERT into award (award_name, creator, recipient, award_created,employee_id) VALUES($1, $2, $3, $4, $5)", [awardType, creatorLast, winLast, date,employee_id],(err, results) => {
+		db.query("INSERT into award (award_name, creator, recipient, award_created,employee_id, recipient_first) VALUES($1, $2, $3, $4, $5, $6)", [awardType, creatorLast, winLast, date,employee_id, winFirst],(err, results) => {
 
 			if (err) {
 				return console.error('error running query', err);
@@ -62,8 +62,7 @@ router.post('/', (req, res) => {
 				})
 				.on("end", function () {
 					//Set tex documents folder and creates a unique file name for each document
-					var latexFolder = "./public/images/texFolder";
-					var file = path.join(latexFolder, (winLast + date + ".tex"));
+					var file = path.join(templateFolder, (winLast + date + ".tex"));
 					var fileName = (winLast + date + ".tex");
 
 					//Create the rendered file and compile
@@ -74,8 +73,9 @@ router.post('/', (req, res) => {
 
 						} else {
 							console.log("right before spawn");
+							console.log(string);
 							//Creates the pdf from the tex document with latexmk found within the texLive buildpack
-							var pdfLatex = spawn("latexmk", ["-outdir=" + latexFolder, "-pdf", file]);
+							var pdfLatex = spawn("latexmk", ["-outdir=" + templateFolder, "-pdf", file]);
 							pdfLatex.stdout.on("end", function (data) {
 								console.log("file should have been creted");
 								// Generate SMTP service account from ethereal.email to send PDF
@@ -114,7 +114,7 @@ router.post('/', (req, res) => {
 											// File Stream attachment
 											{
 												filename:  pdfFileName,    //'latexCertEx2.pdf',
-												path: path.join(latexFolder, pdfFileName),
+												path: path.join(templateFolder, pdfFileName),
 												cid: 'nyan34@example.com' // should be as unique as possible and match cid above
 											}
 										]
@@ -145,14 +145,6 @@ router.post('/', (req, res) => {
 			}
 		});
 	});
-
-
-	//sending the user award input to the database
-	//var winFullName = winFirst + winLast;
-	//var creatorFull = creatorFirst + creatorLast;
-
-
-
 
 
 });

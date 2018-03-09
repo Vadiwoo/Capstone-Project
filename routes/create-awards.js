@@ -30,7 +30,7 @@ router.post('/', (req, res) => {
 	//folder with the images used for the latex document creation
 	var string = "";
 	var templateFolder = "./public/images/";
-console.log('before first query');
+	console.log('before first query');
 	//getting award creator id
 	db.query('SELECT * FROM employee WHERE employee_email = $1',[req.session.username], (err, results) => {
 		console.log(req.session.username);
@@ -140,13 +140,9 @@ console.log('before first query');
 							});
 							res.render('send-award', {message: "URL HERE", succesful_message: "Your Award Profile has been Sent Successfully!" });
 						}
-
 					});
-
 				});
 			}
-
-
 		});
 	});
 

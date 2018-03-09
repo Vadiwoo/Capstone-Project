@@ -67,7 +67,7 @@ router.post('/', (req, res) => {
 					var fileName = (winLast + date + ".tex");
 
 					//Create the rendered file and compile
-					return fs.writeFile(file, string, function (err) {
+					fs.writeFile(file, string, function (err) {
 						if (err) {
 
 							throw 'error writing file: ' + err;

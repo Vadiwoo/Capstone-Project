@@ -115,7 +115,7 @@ router.post('/', (req, res) => {
 											// File Stream attachment
 											{
 												filename:  pdfFileName,    //'latexCertEx2.pdf',
-												path: path.join(latexFolder, pdfFileName),
+												path: latexFolder + pdfFileName,
 												cid: 'nyan34@example.com' // should be as unique as possible and match cid above
 											}
 										]

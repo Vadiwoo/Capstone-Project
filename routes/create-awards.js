@@ -62,6 +62,7 @@ router.post('/', (req, res) => {
 					string = string + data.toString();
 				})
 				.on("end", function () {
+					//latexmk -halt-on-error -outdir=/app/public/images/texFolder -pdf /app/public/images/texFolder/pleaseWork
 					//Set tex documents folder and creates a unique file name for each document
 					var latexFolder = "/app/public/images/texFolder";
 					var fileName = (winLast + date + ".tex");

@@ -10,7 +10,7 @@ var fs = require("fs-extra");
 // var fs = require("fs");
 const db = require('../db');
 const nodemailer = require('nodemailer');
-var spawn = require("child_process").spawn;
+var spawn = require("child_process").spawnSync;
 
 router.get('/', (req, res) => {
 	res.render('create-awards');
@@ -85,8 +85,8 @@ router.post('/', (req, res) => {
 							}
 							console.log(file);
 							//Creates the pdf from the tex document with latexmk found within the texLive buildpack
-							var pdfLatex = spawn("latexmk", ["-halt-on-error -outdir=" + latexFolder, " -pdf ", file]);
-							pdfLatex.stdout.on("end", function (data) {
+							var pdfLatex = spawn("latexmk", ["-outdir=" + latexFolder + " -pdf " + file], {stdio: 'inherit'});
+							// pdfLatex.stdout.on("end", function (data) {
 								// Generate SMTP service account from ethereal.email to send PDF
 								var pdfFileName = winLast + date + '.pdf';
 								console.log('before test accounts');
@@ -158,7 +158,7 @@ router.post('/', (req, res) => {
 								});
 
 
-							})
+							// })
 						// }
 					// });
 				});

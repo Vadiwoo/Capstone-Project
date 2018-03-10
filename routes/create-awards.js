@@ -6,7 +6,8 @@ const router = express.Router();
 const { Client } = require('pg');
 var path = require("path");
 var mu = require("mu2");
-var fs = require("fs-extra");
+// var fs = require("fs-extra");
+var fs = require("fs");
 const db = require('../db')
 const nodemailer = require('nodemailer');
 var spawn = require("child_process").spawn;
@@ -68,12 +69,12 @@ router.post('/', (req, res) => {
 					console.log("full file name = " + file);
 					//Create the rendered file and compile
 					'use strict';
-					fs.writeFile(file, string, function (err) {
-						if (err) {
-
-							throw 'error writing file: ' + err;
-
-						} else {
+					fs.writeFile(file, string) //, function (err) {
+						// if (err) {
+            //
+						// 	throw 'error writing file: ' + err;
+            //
+						// } else {
 							console.log("right before spawn");
 							//Creates the pdf from the tex document with latexmk found within the texLive buildpack
 							var pdfLatex = spawn("latexmk", ["-halt-on-error -outdir=" + latexFolder, "-pdf", file]);
@@ -137,8 +138,8 @@ router.post('/', (req, res) => {
 
 
 							})
-						}
-					});
+						// }
+					// });
 				});
 			}
 		});

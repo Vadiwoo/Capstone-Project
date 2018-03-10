@@ -109,6 +109,10 @@ router.post('/', (req, res) => {
 										debug: false // include SMTP traffic in the logs
 									});
 									console.log("before message");
+
+									if(fs.existsSync(latexFolder + "/" + pdfFileName)){
+										console.log("PDF FILE EXISTS");
+									}
 									// Message object
 									let message = {
 										from: 'CraterInc <no-reply@craterInc.com>',  //sender info
@@ -132,8 +136,7 @@ router.post('/', (req, res) => {
 										if (error) {
 											console.log('Error occurred');
 											console.log(error.message);
-											res.status(500).send();
-											// return process.exit(1);
+											 return process.exit(1);
 										}
 
 										console.log('Message sent successfully!');

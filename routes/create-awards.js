@@ -126,12 +126,14 @@ router.post('/', (req, res) => {
 											}
 										]
 									};
+
 									console.log("sending mail");
 									transporter.sendMail(message, (error, info) => {
 										if (error) {
 											console.log('Error occurred');
 											console.log(error.message);
-											return process.exit(1);
+											res.status(500).send();
+											// return process.exit(1);
 										}
 
 										console.log('Message sent successfully!');

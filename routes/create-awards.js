@@ -69,7 +69,7 @@ router.post('/', (req, res) => {
 					console.log("full file name = " + file);
 					//Create the rendered file and compile
 					'use strict';
-					fs.writeFile(file, string) //, function (err) {
+					fs.writeFileSync(file, string); //, function (err) {
 						// if (err) {
             //
 						// 	throw 'error writing file: ' + err;

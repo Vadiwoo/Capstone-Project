@@ -161,6 +161,8 @@ router.post('/', (req, res) => {
 							// })
 						// }
 					// });
+				}).on("error", function(err) {
+					console.log("error with mu");
 				});
 			}
 		});

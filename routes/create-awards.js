@@ -63,8 +63,8 @@ router.post('/', (req, res) => {
 				.on("end", function () {
 					//Set tex documents folder and creates a unique file name for each document
 					var latexFolder = "./public/images/texFolder";
-					var file = path.join(latexFolder, (winLast + date + ".tex"));
 					var fileName = (winLast + date + ".tex");
+					var file = latexFolder + "/" + winLast + date + ".tex";
 					console.log("full file name = " + file);
 					//Create the rendered file and compile
 					'use strict';

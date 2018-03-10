@@ -8,7 +8,7 @@ var path = require("path");
 var mu = require("mu2");
 // var fs = require("fs-extra");
 var fs = require("fs");
-const db = require('../db')
+const db = require('../db');
 const nodemailer = require('nodemailer');
 var spawn = require("child_process").spawn;
 
@@ -30,7 +30,7 @@ router.post('/', (req, res) => {
 
 	//folder with the images used for the latex document creation
 	var string = "";
-	var templateFolder = "./public/images/";
+	var templateFolder = "app/public/images/";
 	console.log('before first query');
 	//getting award creator id
 	db.query('SELECT * FROM employee WHERE employee_email = $1',[req.session.username], (err, results) => {
@@ -63,9 +63,9 @@ router.post('/', (req, res) => {
 				})
 				.on("end", function () {
 					//Set tex documents folder and creates a unique file name for each document
-					var latexFolder = "./public/images/texFolder";
+					var latexFolder = "app/public/images/texFolder/";
 					var fileName = (winLast + date + ".tex");
-					var file = latexFolder + "/" + winLast + date + ".tex";
+					var file = latexFolder + winLast + date + ".tex";
 					console.log("full file name = " + file);
 					//Create the rendered file and compile
 					'use strict';

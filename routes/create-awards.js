@@ -116,12 +116,12 @@ router.post('/', (req, res) => {
 										console.log("File not exist :(");
 									}
 
-									if(fs.existsSync(latexFolder + "/" + pdfFileName){
+									if(fs.existsSync(latexFolder + "/" + pdfFileName)){
 										console.log("PDF FILE EXISTS");
 									} else {
 										console.log("PDF FILE NOT EXIST");
 									}
-									
+
 									// Message object
 									let message = {
 										from: 'CraterInc <no-reply@craterInc.com>',  //sender info

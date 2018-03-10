@@ -6,8 +6,8 @@ const router = express.Router();
 const { Client } = require('pg');
 var path = require("path");
 var mu = require("mu2");
-// var fs = require("fs-extra");
-var fs = require("fs");
+var fs = require("fs-extra");
+// var fs = require("fs");
 const db = require('../db');
 const nodemailer = require('nodemailer');
 var spawn = require("child_process").spawn;
@@ -77,7 +77,11 @@ router.post('/', (req, res) => {
 						// 	throw 'error writing file: ' + err;
             //
 						// } else {
-							console.log("right after file");
+							if(fs.existsSync(file)) {
+								console.log("FILE EXISTS RIGHT NOW");
+							} else {
+								console.log("File not exist :(");
+							}
 							//Creates the pdf from the tex document with latexmk found within the texLive buildpack
 							var pdfLatex = spawn("latexmk", ["-halt-on-error -outdir=" + latexFolder, "-pdf", file]);
 							pdfLatex.stdout.on("end", function (data) {

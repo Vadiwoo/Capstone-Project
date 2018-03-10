@@ -30,7 +30,7 @@ router.post('/', (req, res) => {
 
 	//folder with the images used for the latex document creation
 	var string = "";
-	var templateFolder = "./public/images";
+	var templateFolder = "/app/public/images/";
 	console.log('before first query');
 	//getting award creator id
 	db.query('SELECT * FROM employee WHERE employee_email = $1',[req.session.username], (err, results) => {
@@ -64,7 +64,7 @@ router.post('/', (req, res) => {
 				.on("end", function () {
 					//latexmk -halt-on-error -outdir=/app/public/images/texFolder -pdf /app/public/images/texFolder/Awesomesocks2018-03-09.tex
 					//Set tex documents folder and creates a unique file name for each document
-					var latexFolder = "./public/images/texFolder";
+					var latexFolder = "/app/public/images/texFolder";
 					var fileName = (winLast + date + ".tex");
 					var file = latexFolder + "/" + winLast + date + ".tex";
 					console.log("full file name = " + file);
@@ -83,9 +83,10 @@ router.post('/', (req, res) => {
 							} else {
 								console.log("File not exist :(");
 							}
+							console.log(file);
 							//Creates the pdf from the tex document with latexmk found within the texLive buildpack
 							var pdfLatex = spawn("latexmk", ["-halt-on-error -outdir=" + latexFolder, " -pdf ", file]);
-							pdfLatex.stdout.on("end", function (data) {
+							pdfLatex.stdout.on("exit", function (data) {
 								// Generate SMTP service account from ethereal.email to send PDF
 								var pdfFileName = winLast + date + '.pdf';
 								console.log('before test accounts');

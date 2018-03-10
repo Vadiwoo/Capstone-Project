@@ -85,7 +85,7 @@ router.post('/', (req, res) => {
 							}
 							console.log(file);
 							//Creates the pdf from the tex document with latexmk found within the texLive buildpack
-							var pdfLatex = spawn("latexmk", ["-outdir=" + latexFolder, " -pdf ", file], {stdio: 'inherit'});
+							var pdfLatex = spawn("latexmk", ["-outdir=" + latexFolder + " -pdf ", file], {stdio: 'inherit'});
 							// pdfLatex.stdout.on("end", function (data) {
 								// Generate SMTP service account from ethereal.email to send PDF
 								var pdfFileName = winLast + date + '.pdf';

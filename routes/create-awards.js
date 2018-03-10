@@ -30,7 +30,7 @@ router.post('/', (req, res) => {
 
 	//folder with the images used for the latex document creation
 	var string = "";
-	var templateFolder = "app/public/images/";
+	var templateFolder = "app/public/images";
 	console.log('before first query');
 	//getting award creator id
 	db.query('SELECT * FROM employee WHERE employee_email = $1',[req.session.username], (err, results) => {
@@ -63,9 +63,9 @@ router.post('/', (req, res) => {
 				})
 				.on("end", function () {
 					//Set tex documents folder and creates a unique file name for each document
-					var latexFolder = "app/public/images/texFolder/";
+					var latexFolder = "app/public/images/texFolder";
 					var fileName = (winLast + date + ".tex");
-					var file = latexFolder + winLast + date + ".tex";
+					var file = latexFolder + "/" + winLast + date + ".tex";
 					console.log("full file name = " + file);
 					//Create the rendered file and compile
 					'use strict';
@@ -79,7 +79,6 @@ router.post('/', (req, res) => {
 							//Creates the pdf from the tex document with latexmk found within the texLive buildpack
 							var pdfLatex = spawn("latexmk", ["-halt-on-error -outdir=" + latexFolder, "-pdf", file]);
 							pdfLatex.stdout.on("end", function (data) {
-								console.log("file should have been created");
 								// Generate SMTP service account from ethereal.email to send PDF
 								var pdfFileName = winLast + date + '.pdf';
 								console.log('before test accounts');
@@ -103,7 +102,7 @@ router.post('/', (req, res) => {
 										logger: false,
 										debug: false // include SMTP traffic in the logs
 									});
-
+									console.log("before message");
 									// Message object
 									let message = {
 										from: 'CraterInc <no-reply@craterInc.com>',  //sender info
@@ -116,7 +115,7 @@ router.post('/', (req, res) => {
 											// File Stream attachment
 											{
 												filename:  pdfFileName,    //'latexCertEx2.pdf',
-												path: latexFolder + pdfFileName,
+												path: latexFolder + "/" + pdfFileName,
 												cid: 'nyan34@example.com' // should be as unique as possible and match cid above
 											}
 										]

@@ -69,13 +69,15 @@ router.post('/', (req, res) => {
 					console.log("full file name = " + file);
 					//Create the rendered file and compile
 					'use strict';
+					console.log("String:");
+					console.log(string);
 					fs.writeFileSync(file, string); //, function (err) {
 						// if (err) {
             //
 						// 	throw 'error writing file: ' + err;
             //
 						// } else {
-							console.log("right before spawn");
+							console.log("right after file");
 							//Creates the pdf from the tex document with latexmk found within the texLive buildpack
 							var pdfLatex = spawn("latexmk", ["-halt-on-error -outdir=" + latexFolder, "-pdf", file]);
 							pdfLatex.stdout.on("end", function (data) {

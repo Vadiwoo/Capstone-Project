@@ -2,22 +2,37 @@
   
     .btn-primary {
         float: left;
+        
     }
+    p {
+        float: left;
+    }
+    h4 {
+        color: forestgreen
     }
     
 
 </style>
-<ul>
-    <li><a href="/sign-out">Sign Out</a></li>
-    <li><a href="/user-edit-profile">Edit Profile</a></li>
-    <li><a href="/user-delete-award">Awards History</a></li>
-    <li><a href="/create-awards">Create Award</a></li>
-    <li><a href="/dashboard">Dashboard</a></li>
-</ul>
+
+<div class="task">
+    <ul>
+        <li><a href="/sign-out">Sign Out</a></li>
+        <li><a href="/user-edit-profile">Edit Profile</a></li>
+        <li><a href="/user-delete-award">Awards History</a></li>
+        <li><a href="/create-awards">Create Award</a></li>
+        <li><a href="/dashboard">Dashboard</a></li>
+    </ul>
+
+</div>
 <h3>Award History</h3>
 
+<div>
+    {{noAwardMessage}}
+</div>
 <h5>{{deleteMessage}}</h5>
+{{#if payload}}
 <div class="background">
+
     <div>
         <table>
             <thead>
@@ -32,7 +47,7 @@
                 <tr>
                     <td>{{id}}</td>
                     <td>{{name}}</td>
-                    <td>{{recipient}}</td>
+                    <td>{{recipient_first}} {{recipient}}</td>
                     <td>{{date}}</td>
                     <td><button onclick="deleteAward({{id}})">DELETE</button></td>
                 </tr>
@@ -46,14 +61,41 @@
     <div>
         <h2>{{deleteMessage}}</h2>
     </div>
+    <p id="demo"></p>
+    <p id="deleteMessage" {{deleteMessage}}></p>
     <br />
     <br />
-    <form name="form1" id="form1" method="post" onsubmit="return redirect()">
-        <input type="submit" class="btn btn-primary" name="delete" id="delete" value="Update My History">
-    </form>
-</div>
+    <div>
+        <p><a href="/user-delete-award">Refresh the Page</a>  to view the  changes.</p>
+    </div>
+
+    </div>
+
+    <div id="myModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure to delete this award history?</p>
+                    <p class="text-warning"><small>If you presss YES, the award will be deleted from your database .</small></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button"  id="cancel"class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button  type="button"   id="confirm" class="btn btn-primary" data-dismiss="modal">YES</button>
+                    <div>
+                     
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
+
+{{/if}}
     <script>
         function deleteAward(id) {
 
@@ -68,10 +110,16 @@
                 "id": id
             };
             console.log("your selected id is", +id);
-
-            xhttp.open("POST", "/user-delete-award/deleteAward");
-            xhttp.setRequestHeader("Content-type", "application/json");
-            xhttp.send(JSON.stringify(data));
+           // var result = getConfirmation();
+           // if (result) {
+               // var message = "Selected row has been succesfully deleted from your record";
+               // document.getElementById("deleteMessage").innerHTML = message.innerHTML;
+                xhttp.open("POST", "/user-delete-award/deleteAward");
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send(JSON.stringify(data));
+                
+            
+   
         }
 
         window.onload = function () {
@@ -80,4 +128,16 @@
                 return false;
             }
         }
+        function getConfirmation() {
+            $("#myModal").modal('show');
+           // var answer = document.getElementById("confirm");
+           // if (answer = "YES") {
+              //  console.log(answer);
+              //  return true; // default true.. need to change this
+            }
+          //  else
+              //  return false;
+      //  }
+
+       
     </script>

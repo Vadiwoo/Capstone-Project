@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
         console.log(req.session.username);
         if(results.rowCount === 0) {
             console.log("rowcount is 0");
-            res.status(404).send("User Does Not Exist");
+            //res.status(404).send("User Does Not Exist");
         }
         else {
             
@@ -21,7 +21,9 @@ router.get('/', (req, res) => {
                 if(results.rowCount === 0) {
                     console.log("Sorry, No awards found.");
                     award_history = "Sorry, No awards found.";
-                    res.status(404).send("User Does Not Exist");
+                    // res.status(404).send("User Does Not Exist");
+                    res.setHeader('Content-Type', 'text/html');
+                    res.render('user-delete-award', {noAwardMessage:"Your award list is empty now!"});  
                 }
                 else 
                 { 
@@ -39,6 +41,7 @@ router.get('/', (req, res) => {
                         payload[count].id= results.rows[count].award_id;
                         payload[count].name= results.rows[count].award_name;
                         payload[count].recipient= results.rows[count].recipient;
+                        payload[count].recipient_first= results.rows[count].recipient_first;
                         payload[count].date= results.rows[count].award_created;
                     }
                        
@@ -63,7 +66,7 @@ router.post('/deleteAward', function(req, res){
             return console.error('error running query', err);
         
         }
-       
+        return res. redirect();
     });
 
  

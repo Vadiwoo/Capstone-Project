@@ -7,7 +7,6 @@ const { Client } = require('pg');
 var path = require("path");
 var mu = require("mu2");
 var fs = require("fs-extra");
-// var fs = require("fs");
 const db = require('../db');
 const nodemailer = require('nodemailer');
 var spawn = require("child_process").spawnSync;
@@ -17,15 +16,15 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-	console.log("in post");
+	
 	//Create-award user inputs
 	var awardType = req.body.award_type;
 	var winFirst = req.body.winnerFirstName;
 	var winLast = req.body.winnerLastName;
 	var winEmail = req.body.winnerEmail;
 	var date = req.body.dateCreated;
-	var creatorFirst= req.body.creatorFirstName;
-	var creatorLast = req.body.creatorLastName
+	var creatorFirst;
+	var creatorLast;
 	var employee_id;
 
 	//folder with the images used for the latex document creation
@@ -41,14 +40,13 @@ router.post('/', (req, res) => {
 		else {
 
 			employee_id = results.rows[0].employee_id;
-			// creatorFirst =  results.rows[0].employee_first_name;
-			//  creatorLast = results.rows[0].employee_last_name;
+			creatorFirst =  results.rows[0].employee_first_name;
+			creatorLast = results.rows[0].employee_last_name;
 		}
 
 		console.log("before second query");
 		//inserting award into database
-		db.query("INSERT into award (award_name, creator, recipient, award_created,employee_id) VALUES($1, $2, $3, $4, $5)", [awardType, creatorLast, winLast, date,employee_id],(err, results) => {
-
+		db.query("INSERT into award (award_name, creator, recipient, award_created,employee_id, recipient_first) VALUES($1, $2, $3, $4, $5, $6)", [awardType, creatorLast, winLast, date,employee_id, winFirst],(err, results) => {
 			if (err) {
 				return console.error('error running query', err);
 			}
@@ -62,33 +60,34 @@ router.post('/', (req, res) => {
 					string = string + data.toString();
 				})
 				.on("end", function () {
-					//latexmk -halt-on-error -outdir=/app/public/images/texFolder -pdf /app/public/images/texFolder/Awesomesocks2018-03-09.tex
+					
 					//Set tex documents folder and creates a unique file name for each document
 					var latexFolder = "/app/public/images/texFolder";
 					var fileName = (winLast + date + ".tex");
 					var file = latexFolder + "/" + winLast + date + ".tex";
 					console.log("full file name = " + file);
+					
 					//Create the rendered file and compile
 					'use strict';
-					console.log("String:");
 					console.log(string);
 					fs.writeFileSync(file, string); //, function (err) {
-						// if (err) {
-            //
+						// if (err) {         
 						// 	throw 'error writing file: ' + err;
-            //
 						// } else {
+							//Testing
 							if(fs.existsSync(file)) {
 								console.log("FILE EXISTS RIGHT NOW");
 							} else {
 								console.log("File not exist :(");
 							}
 							console.log(file);
+							
 							//Creates the pdf from the tex document with latexmk found within the texLive buildpack
 							var pdfLatex = spawn("latexmk", ["-outdir=" + latexFolder, "-pdf", file], {stdio: 'inherit'});
 							// pdfLatex.stdout.on("end", function (data) {
-								// Generate SMTP service account from ethereal.email to send PDF
 								var pdfFileName = winLast + date + '.pdf';
+					
+								// Generate SMTP service account from ethereal.email to send PDF
 								console.log('before test accounts');
 								nodemailer.createTestAccount((err, account) => {
 									if (err) {
@@ -96,9 +95,8 @@ router.post('/', (req, res) => {
 										console.error(err);
 										return process.exit(1);
 									}
-									//console.log('Credentials obtained, sending message...');
+									
 									// Create a SMTP transporter object
-
 									let transporter = nodemailer.createTransport({
 										host: account.smtp.host,
 										port: account.smtp.port,
@@ -110,8 +108,10 @@ router.post('/', (req, res) => {
 										logger: false,
 										debug: false // include SMTP traffic in the logs
 									});
+									
+									//Testing
 									console.log("before message");
-
+									
 									if(fs.existsSync(file)) {
 										console.log("TEX FILE EXISTS");
 									} else {
@@ -157,10 +157,6 @@ router.post('/', (req, res) => {
 									});
 								});
 
-
-							// })
-						// }
-					// });
 				}).on("error", function(err) {
 					console.log("error with mu");
 				});
@@ -168,16 +164,6 @@ router.post('/', (req, res) => {
 		});
 	});
 
-
-	//sending the user award input to the database
-	//var winFullName = winFirst + winLast;
-	//var creatorFull = creatorFirst + creatorLast;
-
-
-
-
-
 });
-
 
 module.exports = router;

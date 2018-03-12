@@ -1,4 +1,5 @@
 
+    
     <ul>
         <li><a href="/sign-out">Sign Out</a></li>
         <li><a href="/user-edit-profile">Edit Profile</a></li>
@@ -11,7 +12,7 @@
         <div style="display:inline-block"><h3>The Sample of the Certificate for the Winners</h3></div>
 
     </div>
-    <img src="certificate-sample.png" alt="Certificate" style="float:right;width:500px;height:500px;">
+    <img src="certificate-sample.jpg" alt="Certificate" style="float:right;width:500px;height:500px;transform: rotate(90deg);">
     <div class="row">
         <div class="col-sm-4">
             <form action="/create-awards" method="post">
@@ -32,7 +33,6 @@
                         </div>
                         <div class="col-xs-6">
                             <input id="winnerLastName" type="text" class="form-control" name="winnerLastName" placeholder="Last Name" />
-
                         </div>
                     </div>
                 </div>
@@ -52,27 +52,10 @@
                         <div class="col-xs-6">
                             <input id="dateCreated" type="date" class="form-control" name="dateCreated" placeholder="Date" />
                         </div>
-                        <div class="col-xs-6">
-                            <input id="time" type="time" class="form-control" name="time" value="" placeholder="Time" />
-                        </div>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label>Award Created By</label>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <input id="creatorFirstName" type="text" class="form-control" name="creatorFirstName" placeholder="First Name" />
-                        </div>
-                        <div class="col-xs-6">
-                            <input id="creatorLastName" type="text" class="form-control" name="creatorLastName" VA placeholder="Last Name" />
-                        </div>
-                    </div>
-                </div>
-
 
                 <button type="submit" class="btn btn-primary">Submit Award</button>
             </form>
         </div>
     </div>
-

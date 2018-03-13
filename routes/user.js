@@ -43,7 +43,7 @@ router.post("/upload/signature", upload.single('file'), function(req, res) {
     });
 });
 
-router.post('/', function(req,res){
+router.post('/', function(req,res) {
   console.log(req.body);
   //we'll need to hash the password if it is new
   if(req.body.isNew == true){

@@ -255,9 +255,9 @@ document.getElementById("topThreeCreators").addEventListener("click", function()
 function topThreeCreators(chartInfo) {
     var tempArr = [];
     tempArr.push(["Name", "Awards", { role: "style" }]);
-    tempArr.push([chartInfo.rows[0].creator, parseInt(chartInfo.rows[0].count), "blue"]);
-    tempArr.push([chartInfo.rows[1].creator, parseInt(chartInfo.rows[1].count), "red"]);
-    tempArr.push([chartInfo.rows[2].creator, parseInt(chartInfo.rows[2].count), "green"]);
+    tempArr.push([chartInfo.rows[0].employee_first_name + " " + chartInfo.rows[0].employee_last_name, parseInt(chartInfo.rows[0].count), "blue"]);
+    tempArr.push([chartInfo.rows[1].employee_first_name + " " + chartInfo.rows[1].employee_last_name, parseInt(chartInfo.rows[1].count), "red"]);
+    tempArr.push([chartInfo.rows[2].employee_first_name + " " + chartInfo.rows[2].employee_last_name, parseInt(chartInfo.rows[2].count), "green"]);
 
 
   var data = google.visualization.arrayToDataTable(tempArr);

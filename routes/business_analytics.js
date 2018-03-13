@@ -54,7 +54,7 @@ function queryUserType() {
 
 function queryByDepartment(scope) {
   if(scope === 'all'){
-    return db.query('SELECT department.department_name, COUNT(department.department_name) FROM department LEFT JOIN employee on (department.department_id = employee.department_id) GROUP BY department.department_name');
+    return db.query('SELECT department.department_name, COUNT(department.department_name) FROM department LEFT JOIN employee on (department.department_id = employee.department_id) WHERE employee.department_id IS NOT NULL GROUP BY department.department_name');
   }
   else {
     return db.query('SELECT department.department_name, COUNT(department.department_name) FROM department LEFT JOIN employee on (department.department_id = employee.department_id) WHERE employee.employee_type = $1 GROUP BY department.department_name', [scope]);
@@ -63,10 +63,6 @@ function queryByDepartment(scope) {
 
 function queryAwardsByType() {
   return db.query('SELECT award_name, COUNT(award_name) FROM award GROUP BY award_name');
-}
-
-function queryUsersByDepartment() {
-  return db.query('');
 }
 
 function queryCreatedOnDays() {
@@ -78,6 +74,6 @@ function queryAwardsPerDay() {
 }
 
 function queryTopThreeCreators() {
-  return db.query('SELECT creator, COUNT(*) FROM award GROUP BY creator ORDER BY count DESC');
+  return db.query('SELECT employee.employee_id, employee.employee_first_name, employee.employee_last_name, COUNT(*) FROM award LEFT JOIN employee ON employee.employee_id = award.employee_id WHERE employee.employee_id IS NOT NULL GROUP BY employee.employee_id ORDER BY count DESC');
 }
 module.exports = router;

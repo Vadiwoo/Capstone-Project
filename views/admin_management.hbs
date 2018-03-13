@@ -1,7 +1,7 @@
 <div>
   <ul>
     <li><a href="/sign-out">Sign Out</a></li>
-    <li><a href="#">Analytics</a></li>
+    <li><a href="/business_analytics">Analytics</a></li>
     <li><a href="/admin_management">Admin Management</a></li>
     <li><a href="/dashboard">Dashboard</a></li>
   </ul>
@@ -104,7 +104,7 @@
     </div>
     <div class="form-row">
       <div class="form-group col-md-12">
-        <button class="btn btn-default" type="button" onclick="createNewUser()" id=submitButton disabled=true>Save</button>
+        <button class="btn btn-default" type="button" onclick="submitForm()" id=submitButton disabled=true>Save</button>
         <button class="btn btn-default" type="button" id="editButton" onclick="editToggledOn()" disabled=true>Edit</button>
         <button class="btn btn-default"  type="button" id="cancelEditButton" onclick="cancelEdit()" disabled=true>Cancel</button>
         <button class="btn btn-danger pull-right" type="button" id="deleteButton" onclick="deleteUserProfile()" disabled=true>Delete Profile</button>
@@ -172,17 +172,8 @@ function userSearch(){
   }
 }
 
-function createNewUser() {
-  console.log(document.getElementById("isNew").value);
-  if(document.getElementById("isNew").value = "false"){
-    submitForm(false);
-  } else {
-    submitForm(true);
-  }
-}
-
 //isNew determines if this is a NEW user, or if we are editing an old one.
-function submitForm(isNew) {
+function submitForm() {
   disableSubmitButton();
 
 // code modified from http://www.jquerybyexample.net/2012/06/check-if-radio-button-is-checked-or.html
@@ -194,7 +185,7 @@ function submitForm(isNew) {
     "email" : (document.getElementById("email")).value,
     "password" : document.getElementById("password").value,
     "department_name" : document.getElementById("inputState").value,
-    "isNew" : isNew,
+    "isNew" : document.getElementById("isNew").value,
     "type" : type
   };
 

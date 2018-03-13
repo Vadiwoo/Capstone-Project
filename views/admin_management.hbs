@@ -12,7 +12,6 @@
     <h2>Administrator Management</h2>
   </div>
 </div>
-
 <div class="col-md-3 container">
   <div class="row">
     <h2 align="center">Find User</h2>
@@ -26,14 +25,22 @@
       <span class="input-group-btn">
         <button class="btn btn-default" type="button" onclick="userSearch()">Search</button>
       </span>
-    </div><!-- /input-group -->
-  </div><!-- /.col-lg-6 -->
+    </div>
+  </div>
 </div>
+</br>
+</br>
 <div class="row">
   <div class="col-md-12">
     <h2>Add Signiture</h2>
     <p>Attach a signature to a user by entering a user's email into the box below. </br>Note: you are able to upload signatures to both admins and users, but only users will be able to create a certificate with the signature.</p>
   </br>
+  <div class="alert alert-success" id="signature-success" hidden=true>
+    <strong>Success!</strong>
+  </div>
+  <div class="alert alert-danger" id="signature-failure" hidden=true>
+    <strong>Error Uploading Signature!</strong>
+  </div>
     <form method="post" name="signature" enctype="multipart/form-data">
       <label for="email" class="col-form-label">Account Email</label>
       <input type="email" class="form-control" id="sig_email" name="email" placeholder="Email" required>
@@ -44,12 +51,6 @@
      <div>
      </br>
        <button type="submit" class="btn btn-primary" id="submitSignature">Submit</button>
-     </div>
-     <div class="alert alert-success" id="signiture-success" hidden=true>
-       <strong>Success!</strong>
-     </div>
-     <div class="alert alert-danger" id="signature-failure" hidden=true>
-       <strong>Error Uploading Signature!</strong>
      </div>
     </form>
   </div>
@@ -215,6 +216,7 @@ function submitForm(isNew) {
 }
 
 function createUserButton(){
+  disableCreateNewUser();
   enableSubmitButton();
   disableDeleteButton();
   disableEditButton();
@@ -234,6 +236,7 @@ function deleteUserProfile() {
       console.log("Successfully deleted user!")
       clearAllInputs();
       enableFormInputs();
+      enableCreateNewUser();
       disableEditButton();
       alertSuccess();
     }
@@ -274,6 +277,7 @@ function alertSignatureFailure() {
 }
 
 function editToggledOn() {
+  diableCreateNewUser();
   enableSubmitButton();
   enableCancelEditButton();
   disableEditButton();
@@ -283,6 +287,7 @@ function editToggledOn() {
 }
 
 function cancelEdit() {
+  enableCreateNewUser();
   disableSubmitButton();
   enableEditButton();
   disableCancelEditButton();
@@ -374,5 +379,13 @@ function enableDepartments() {
 
 function disableDepartments() {
   document.getElementById("inputState").disabled = true;
+}
+
+function disableCreateNewUser() {
+  document.getElementById("createUser").disabled = true;
+}
+
+function enableCreateNewUser() {
+  document.getElementById("createUser").disabled = false;
 }
 </script>

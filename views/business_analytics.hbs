@@ -97,11 +97,20 @@ function drawBarChart(title, data) {
 }
 
 function drawCalendar(title, data) {
+var calHeight;
+  if(title === 'Awards Per Day') {
+    calHeight = 170 * 8;
+  }
+  else {
+    calHeight = 180;
+  }
   var options = {'title': title,
-  'noDataPattern': {
+  height: calHeight,
+  noDataPattern: {
     backgroundColor: '#87b574',
     color: '#dff0d8'
-  }};
+  }
+};
 
   var chart = new google.visualization.Calendar(document.getElementById('chartRow'));
   chart.draw(data, options);

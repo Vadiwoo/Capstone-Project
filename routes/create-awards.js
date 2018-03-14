@@ -89,6 +89,7 @@ router.post('/', (req, res) => {
 
 								// Generate SMTP service account from ethereal.email to send PDF
 								console.log('before test accounts');
+								
 								nodemailer.createTestAccount((err, account) => {
 									if (err) {
 										console.error('Failed to create a testing account');
@@ -123,7 +124,7 @@ router.post('/', (req, res) => {
 									} else {
 										console.log("PDF FILE NOT EXIST");
 									}
-									try{
+									
 									// Message object
 									let message = {
 										from: 'CraterInc <no-reply@craterInc.com>',  //sender info
@@ -131,20 +132,17 @@ router.post('/', (req, res) => {
 										subject: 'Certificate ✔',
 										text: 'Congratulations!',  //plaintext
 										html: '<p><b>Congratulations</b></p>' +  //HTML body with 2 lines
-										'<p>Here\'s a certificate for you as an embedded attachment:<br/><img src="cid:nyan34@example.com"/></p>', //cid matches below
+										'<p>Crater Incorporated, would like to extend our appreciation for the amazing work you have accomplished.  Your diligence, self-motivation as well as dedication have been a source of inspiration for the rest of the team.<br/><br/> Thank you for all your effort.<br/><br/>Best regards,<br/>The Crater Inc Management Team</p>',
 										attachments: [   // An array of attachments
 											// File Stream attachment
 											{
 												filename:  pdfFileName,    //'latexCertEx2.pdf',
 												path: latexFolder + "/" + pdfFileName,
-												cid: 'nyan34@example.com' // should be as unique as possible and match cid above
+												cid: 'nyan34@example.com' // should be as unique as possible
 											}
 										]
 									};
-								} catch(exc) {
-									console.log("ERROR: " + exc);
-									res.status(500).send();
-								}
+							
 								try{
 									console.log("sending mail");
 									transporter.sendMail(message, (error, info) => {

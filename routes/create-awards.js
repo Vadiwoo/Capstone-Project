@@ -128,7 +128,7 @@ router.post('/', (req, res) => {
 									// Message object
 									let message = {
 										from: 'CraterInc <no-reply@craterInc.com>',  //sender info
-										to: winFirst + winLast + '<' + winEmail + '>', //Comma separated list of recipients: 'Russel Metzger<rmetzger@craterinc.com>',
+										to: winFirst + ' ' + winLast + '<' + winEmail + '>', //Comma separated list of recipients: 'Russel Metzger<rmetzger@craterinc.com>',
 										subject: 'Certificate ✔',
 										text: 'Congratulations!',  //plaintext
 										html: '<p><b>Congratulations</b></p>' +  //HTML body with 2 lines

@@ -99,6 +99,12 @@ h4 {
     color: #dddddd;
     font-size: 200%;
 }
+
+.btn-custom {
+	background-color: #356B15;
+	color: white;
+}
+
 .block1 {
     float: center;
     display: inline-block;

@@ -46,7 +46,7 @@ router.post('/', (req, res) => {
 
 		console.log("before second query");
 		//inserting award into database
-		db.query("INSERT into award (award_name, creator, recipient, award_created,employee_id, recipient_first) VALUES($1, $2, $3, $4, $5, $6)", [awardType, creatorLast, winLast, date,employee_id, winFirst],(err, results) => {
+		db.query("INSERT into award (award_name, creator, recipient, award_created,employee_id, recipient_first) VALUES($1, $2, $3, $4, $5, $6)", [awardType, creatorLast, winLast, 'now', employee_id, winFirst],(err, results) => {
 			if (err) {
 				return console.error('error running query', err);
 			}

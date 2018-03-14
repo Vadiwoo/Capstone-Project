@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-	
+
 	//Create-award user inputs
 	var awardType = req.body.award_type;
 	var winFirst = req.body.winnerFirstName;
@@ -60,18 +60,18 @@ router.post('/', (req, res) => {
 					string = string + data.toString();
 				})
 				.on("end", function () {
-					
+
 					//Set tex documents folder and creates a unique file name for each document
 					var latexFolder = "/app/public/images/texFolder";
 					var fileName = (winLast + date + ".tex");
 					var file = latexFolder + "/" + winLast + date + ".tex";
 					console.log("full file name = " + file);
-					
+
 					//Create the rendered file and compile
 					'use strict';
 					console.log(string);
 					fs.writeFileSync(file, string); //, function (err) {
-						// if (err) {         
+						// if (err) {
 						// 	throw 'error writing file: ' + err;
 						// } else {
 							//Testing
@@ -81,12 +81,12 @@ router.post('/', (req, res) => {
 								console.log("File not exist :(");
 							}
 							console.log(file);
-							
+
 							//Creates the pdf from the tex document with latexmk found within the texLive buildpack
 							var pdfLatex = spawn("latexmk", ["-outdir=" + latexFolder, "-pdf", file], {stdio: 'inherit'});
 							// pdfLatex.stdout.on("end", function (data) {
 								var pdfFileName = winLast + date + '.pdf';
-					
+
 								// Generate SMTP service account from ethereal.email to send PDF
 								console.log('before test accounts');
 								nodemailer.createTestAccount((err, account) => {
@@ -95,7 +95,7 @@ router.post('/', (req, res) => {
 										console.error(err);
 										return process.exit(1);
 									}
-									
+
 									// Create a SMTP transporter object
 									let transporter = nodemailer.createTransport({
 										host: account.smtp.host,
@@ -108,10 +108,10 @@ router.post('/', (req, res) => {
 										logger: false,
 										debug: false // include SMTP traffic in the logs
 									});
-									
+
 									//Testing
 									console.log("before message");
-									
+
 									if(fs.existsSync(file)) {
 										console.log("TEX FILE EXISTS");
 									} else {
@@ -123,7 +123,7 @@ router.post('/', (req, res) => {
 									} else {
 										console.log("PDF FILE NOT EXIST");
 									}
-
+									try{
 									// Message object
 									let message = {
 										from: 'CraterInc <no-reply@craterInc.com>',  //sender info
@@ -141,7 +141,11 @@ router.post('/', (req, res) => {
 											}
 										]
 									};
-
+								} catch(exc) {
+									console.log("ERROR: " + exc);
+									res.status(500).send();
+								}
+								try{
 									console.log("sending mail");
 									transporter.sendMail(message, (error, info) => {
 										if (error) {
@@ -155,10 +159,15 @@ router.post('/', (req, res) => {
 										var url = nodemailer.getTestMessageUrl(info);
 										res.render('send-award', {message: " " + url, succesful_message: "Your Award Profile has been Sent Successfully!" });
 									});
+								} catch(e) {
+									console.log("ERROR: " + e);
+									res.status(500).send();
+								}
 								});
 
 				}).on("error", function(err) {
 					console.log("error with mu");
+					res.status(500).send();
 				});
 			}
 		});

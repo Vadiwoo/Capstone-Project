@@ -27,13 +27,14 @@ router.post('/', (req, res) => {
 	var creatorLast;
 	var employee_id;
 
-	//folder with the images used for the latex document creation
+	//path to the images folder on Heroku
 	var string = "";
-	var templateFolder = "/app/public/images/";
+	var latexFolder = "/app/public/images/";
 	console.log('before first query');
-	//getting award creator id
+	
+	//querying the database to pull user information for latex creation
 	db.query('SELECT * FROM employee WHERE employee_email = $1',[req.session.username], (err, results) => {
-		console.log(req.session.username);
+		//console.log(req.session.username);
 		if(results.rowCount === 0) {
 			res.status(404).send("User Does Not Exist");
 		}
@@ -44,16 +45,17 @@ router.post('/', (req, res) => {
 			creatorLast = results.rows[0].employee_last_name;
 		}
 
-		console.log("before second query");
+		//console.log("before second query");
 		//inserting award into database
 		db.query("INSERT into award (award_name, creator, recipient, award_created,employee_id, recipient_first) VALUES($1, $2, $3, $4, $5, $6)", [awardType, creatorLast, winLast, 'now', employee_id, winFirst],(err, results) => {
 			if (err) {
 				return console.error('error running query', err);
 			}
 			else {
+				
 				//mu2 is used to replace the key words with the user inputs {{ award_type }}
-				//Pulls from the root and compiles and renders the changes
-				mu.root = templateFolder;
+				//Pulls from the root tex file in the images folder and compiles and renders the changes
+				mu.root = latexFolder;
 				mu.compileAndRender("certTex.tex", {"award_type": awardType, "winnerFirstName": winFirst, "winnerLastName": winLast, "date": date, "creatorFirstName": creatorFirst, "creatorLastName": creatorLast})
 				//Data is set to a string
 				.on("data", function (data) {
@@ -61,15 +63,14 @@ router.post('/', (req, res) => {
 				})
 				.on("end", function () {
 
-					//Set tex documents folder and creates a unique file name for each document
-					var latexFolder = "/app/public/images/texFolder";
+					//Creates a unique file name for each newly created tex document
 					var fileName = (winLast + date + ".tex");
 					var file = latexFolder + "/" + winLast + date + ".tex";
 					console.log("full file name = " + file);
 
 					//Create the rendered file and compile
 					'use strict';
-					console.log(string);
+					//console.log(string);
 					fs.writeFileSync(file, string); //, function (err) {
 						// if (err) {
 						// 	throw 'error writing file: ' + err;
@@ -83,6 +84,7 @@ router.post('/', (req, res) => {
 							console.log(file);
 
 							//Creates the pdf from the tex document with latexmk found within the texLive buildpack
+							//Child process is necessary since latexmk requires several passes to complete
 							var pdfLatex = spawn("latexmk", ["-outdir=" + latexFolder, "-pdf", file], {stdio: 'inherit'});
 							// pdfLatex.stdout.on("end", function (data) {
 								var pdfFileName = winLast + date + '.pdf';

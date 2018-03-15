@@ -1,2 +1,1 @@
-Added logo,
-Added nav bar for user and admin
+Deleted texFolder

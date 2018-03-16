@@ -26,6 +26,9 @@
         <button class="btn btn-default btn-custom" type="button" onclick="userSearch()">Search</button>
       </span>
     </div>
+    <div class="alert alert-danger" id="find-failure" hidden=true>
+      <strong>Email Not Found!</strong>
+    </div>
   </div>
 </div>
 </br>
@@ -166,6 +169,8 @@ function userSearch(){
         enableEditButton();
         enableDeleteButton();
         disableSubmitButton();
+      } else if(this.readyState == 4 && this.status == 404) {
+        alertFindFailure();
       }
     };
     xhttp.open("GET", "/user/"+userEmail.value, true);
@@ -197,6 +202,8 @@ function submitForm() {
       console.log("Successfully added/updated user!")
       disableFormInputs();
       enableEditButton();
+      enableCreateNewUser();
+      disableCancelEditButton();
       alertSuccess();
     } else if(this.readyState == 4 && this.status != 200){
       alertFailure();
@@ -268,6 +275,12 @@ function alertSignatureSuccess(){
 function alertSignatureFailure() {
   $("#signature-failure").fadeTo(2000, 500).slideUp(500, function(){
     $("#signature-failure").slideUp(500);
+  });
+}
+
+function alertFindFailure() {
+  $("#find-failure").fadeTo(2000, 500).slideUp(500, function(){
+    $("#find-failure").slideUp(500);
   });
 }
 

@@ -177,7 +177,7 @@ router.post('/', function (req, res, next) {
             if (status == false) {
 
                 console.log("Wrong Email or Password has entered");
-                res.render('sign-in', { error_message: "Incorrect password has entered!" });
+                res.render('sign-in', { error_message: "Incorrect password was entered!" });
                 return;
 
 

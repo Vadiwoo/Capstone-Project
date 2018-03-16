@@ -23,8 +23,11 @@
     <div class="input-group">
       <input type="text" class="form-control" id="userSearch" placeholder="Search for user...">
       <span class="input-group-btn">
-        <button class="btn btn-default" type="button" onclick="userSearch()">Search</button>
+        <button class="btn btn-default btn-custom" type="button" onclick="userSearch()">Search</button>
       </span>
+    </div>
+    <div class="alert alert-danger" id="find-failure" hidden=true>
+      <strong>Email Not Found!</strong>
     </div>
   </div>
 </div>
@@ -50,7 +53,7 @@
      </div>
      <div>
      </br>
-       <button type="submit" class="btn btn-primary" id="submitSignature">Submit</button>
+       <button type="submit" class="btn btn-primary btn-custom" id="submitSignature">Submit</button>
      </div>
     </form>
   </div>
@@ -104,17 +107,18 @@
     </div>
     <div class="form-row">
       <div class="form-group col-md-12">
-        <button class="btn btn-default" type="button" onclick="submitForm()" id=submitButton disabled=true>Save</button>
-        <button class="btn btn-default" type="button" id="editButton" onclick="editToggledOn()" disabled=true>Edit</button>
-        <button class="btn btn-default"  type="button" id="cancelEditButton" onclick="cancelEdit()" disabled=true>Cancel</button>
+        <button class="btn btn-default btn-custom" type="button" onclick="submitForm()" id=submitButton disabled=true>Save</button>
+        <button class="btn btn-default btn-custom" type="button" id="editButton" onclick="editToggledOn()" disabled=true>Edit</button>
+        <button class="btn btn-default btn-custom"  type="button" id="cancelEditButton" onclick="cancelEdit()" disabled=true>Cancel</button>
         <button class="btn btn-danger pull-right" type="button" id="deleteButton" onclick="deleteUserProfile()" disabled=true>Delete Profile</button>
         <input type="hidden" name="isNew" id="isNew" value="">
+        <input type="hidden" name="employee_id" id="employee_id" value="">
       </div>
     </div>
   </form>
   <div class="row">
     <div class-"col-lg-12">
-      <button class="btn btn-primary btn-large btn-block" type="button" id="createUser" onclick="createUserButton()">Create User</button>
+      <button class="btn btn-primary btn-custom btn-large btn-block" type="button" id="createUser" onclick="createUserButton()">Create User</button>
     </div>
   </div>
   <div class="col-sm-12">
@@ -165,6 +169,8 @@ function userSearch(){
         enableEditButton();
         enableDeleteButton();
         disableSubmitButton();
+      } else if(this.readyState == 4 && this.status == 404) {
+        alertFindFailure();
       }
     };
     xhttp.open("GET", "/user/"+userEmail.value, true);
@@ -186,6 +192,7 @@ function submitForm() {
     "password" : document.getElementById("password").value,
     "department_name" : document.getElementById("inputState").value,
     "isNew" : document.getElementById("isNew").value,
+    "employee_id" : document.getElementById("employee_id").value,
     "type" : type
   };
 
@@ -195,6 +202,8 @@ function submitForm() {
       console.log("Successfully added/updated user!")
       disableFormInputs();
       enableEditButton();
+      enableCreateNewUser();
+      disableCancelEditButton();
       alertSuccess();
     } else if(this.readyState == 4 && this.status != 200){
       alertFailure();
@@ -226,9 +235,11 @@ function deleteUserProfile() {
     if(this.readyState == 4 && this.status == 200) {
       console.log("Successfully deleted user!")
       clearAllInputs();
-      enableFormInputs();
+      disableFormInputs();
       enableCreateNewUser();
+      disableSubmitButton();
       disableEditButton();
+      disableCancelEditButton();
       alertSuccess();
     }
   };
@@ -267,8 +278,14 @@ function alertSignatureFailure() {
   });
 }
 
+function alertFindFailure() {
+  $("#find-failure").fadeTo(2000, 500).slideUp(500, function(){
+    $("#find-failure").slideUp(500);
+  });
+}
+
 function editToggledOn() {
-  diableCreateNewUser();
+  disableCreateNewUser();
   enableSubmitButton();
   enableCancelEditButton();
   disableEditButton();
@@ -293,7 +310,7 @@ function populateFormDisabled(json){
   document.getElementById("lastName").value = json.employee_last_name;
   document.getElementById("password").value = "";
   document.getElementById("email").value = json.employee_email;
-
+  document.getElementById("employee_id").value = json.employee_id;
   if (json.employee_type == "admin") {
     document.getElementById("isAdminYes").checked = true;
   } else {
@@ -327,6 +344,7 @@ function enableFormInputs() {
   document.getElementById("firstName").disabled = false;
   document.getElementById("lastName").disabled = false;
   document.getElementById("password").disabled = false;
+  document.getElementById("email").disabled = false; //TODO
   document.getElementById("isAdminYes").disabled = false;
   document.getElementById("isAdminNo").disabled = false;
   enableDepartments();

@@ -90,7 +90,7 @@ router.post('/', function(req,res) {
           });
         });
       }
-    //else if there's no update to teh password, upload everything EXCEPT the password
+    //else if there's no update to the password, upload everything EXCEPT the password
   }
 });
 

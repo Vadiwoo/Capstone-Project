@@ -75,7 +75,7 @@ router.post('/', (req, res, next) => {
         });
     });
 
-    res.render('profile-edit', { succesful_message: "You Profile has been Updated Succesfully!" });
+    res.render('profile-edit', { succesful_message: "Your Profile Has Been Updated Succesfully!" });
 });
 
 
